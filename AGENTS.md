@@ -1,0 +1,38 @@
+# AGENTS.md
+
+Instrucciones para asistentes de código (Codex, Claude Code y similares) en este repositorio.
+
+## Proyecto
+
+- Proyecto de equipo del Laboratorio de Temas Selectos de Sistemas Inteligentes (LBTSSI),
+  FIME UANL, agosto - diciembre 2026. Docente: Raquel Martínez Martínez.
+- Las actividades del curso (reportes .docx) y la rúbrica están en
+  `~/Work/uni/sisint/` (`team-activities/` y `resources/LB_SISINT_PracticasAgo-Dic2025.xlsx`).
+  Este repositorio solo contiene el código y su documentación técnica.
+- El cronograma de 9 fases está en la actividad 1.3 (`team-activities/LBTSSI1234567A03.docx`).
+  Los requerimientos y la arquitectura están en `docs/`.
+
+## Decisiones vigentes
+
+Ver `docs/arquitectura.md`, sección 8. En resumen:
+
+- Los CVs y vacantes analizados están en inglés; la interfaz, documentación, comentarios y
+  mensajes de commit están en español. Los identificadores (variables, funciones, archivos,
+  campos JSON, ramas) están en inglés.
+- Clasificación de pares CV-vacante en `Good Fit`, `Potential Fit` y `No Fit`, con el conjunto
+  de datos `cnamuangtoun/resume-job-description-fit` de Hugging Face.
+- Regresión Logística como modelo principal, Naive Bayes y similitud coseno como líneas base.
+- Backend Python + FastAPI, dashboard React + Vite + TypeScript, SQLite local.
+
+## Entorno y comandos
+
+- Python 3.12 o superior (fijado en 3.14 con mise). Entorno virtual en `.venv/`.
+- Instalación: `pip install -e ".[dev]"` y `python -m spacy download en_core_web_sm`.
+- Antes de cada commit: `ruff check .`, `ruff format --check .` y `pytest`.
+
+## Reglas
+
+- No modificar archivos `.env` ni subir datos descargados o modelos entrenados (están en
+  `.gitignore`).
+- Los CVs de prueba usan solo datos ficticios.
+- Una rama por fase o tarea; `git push` y merges solo con aprobación del responsable.
