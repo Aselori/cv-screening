@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Datos y modelos generados (se regeneran con los scripts de data/)
+data/raw/
+data/processed/
+models/*.joblib
+
+# Node (dashboard, fase 7)
+node_modules/
+dist/
+
+# Entorno
+.env
+.env.*
+.DS_Store

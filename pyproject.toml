@@ -1,0 +1,45 @@
+[project]
+name = "cv-screening"
+version = "0.1.0"
+description = "Selección y filtrado inteligente de currículums para Recursos Humanos (LBTSSI, FIME UANL)."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # Fase 3: carga y parsing de documentos
+    "pdfplumber>=0.11",
+    "python-docx>=1.1",
+    # Contratos de datos (esquemas JSON) y API
+    "pydantic>=2.7",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "python-multipart>=0.0.9",
+    # Fases 2, 4 y 5: datos, PLN y modelos
+    "pandas>=2.2",
+    "huggingface-hub>=0.24",
+    "spacy>=3.8",
+    "scikit-learn>=1.5",
+    "joblib>=1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
