@@ -11,6 +11,8 @@ Instrucciones para asistentes de código (Codex, Claude Code y similares) en est
   Este repositorio solo contiene el código y su documentación técnica.
 - El cronograma de 9 fases está en la actividad 1.3 (`team-activities/LBTSSI1234567A03.docx`).
   Los requerimientos y la arquitectura están en `docs/`.
+- Los roles por integrante de la actividad 1.3 son nominales: no indican quién hace cada
+  parte. No asignar responsables por módulo en la documentación.
 
 ## Decisiones vigentes
 

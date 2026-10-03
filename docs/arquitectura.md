@@ -66,21 +66,19 @@ sistema:
 
 ## 3. Módulos
 
-| # | Módulo | Entrada | Salida | Fase | Responsable |
-|---|---|---|---|---|---|
-| 1 | Ingesta | Archivo PDF o DOCX | Texto plano o error por archivo | 3 | Raúl |
-| 2 | Parsing | Texto plano | `CV` en JSON con secciones | 3 | Raúl |
-| 3 | Anonimización | `CV` | `CV` sin datos personales | 2, 4 | Eduardo, Oziel |
-| 4 | Preprocesamiento PLN | Texto | Idioma detectado (es/en) y tokens lematizados sin palabras vacías | 4 | Oziel |
-| 5 | Base de conocimiento | Habilidades en texto libre, en español o inglés | Habilidades normalizadas (mismo identificador en ambos idiomas) | 4, 6 | Oziel |
-| 6 | Características | `CV` + `Vacancy` | Las cuatro características de requisitos.md, sección 5 | 5, 6 | Oziel |
-| 7 | Modelos | Las cuatro características | Probabilidad por clase | 5 | Oziel |
-| 8 | Puntaje y explicación | Probabilidades + características | `Evaluation` | 6 | Oziel |
-| 9 | API REST | Peticiones HTTP | JSON | 6 | Raúl |
-| 10 | Dashboard | API REST | Interfaz web | 7 | Aldo |
-| 11 | Almacenamiento | Vacantes, evaluaciones, decisiones | SQLite | 6, 8 | Eduardo |
-
-Los responsables siguen los roles de la actividad 1.3; Ariel coordina la integración (fase 8).
+| # | Módulo | Entrada | Salida | Fase |
+|---|---|---|---|---|
+| 1 | Ingesta | Archivo PDF o DOCX | Texto plano o error por archivo | 3 |
+| 2 | Parsing | Texto plano | `CV` en JSON con secciones | 3 |
+| 3 | Anonimización | `CV` | `CV` sin datos personales | 2, 4 |
+| 4 | Preprocesamiento PLN | Texto | Idioma detectado (es/en) y tokens lematizados sin palabras vacías | 4 |
+| 5 | Base de conocimiento | Habilidades en texto libre, en español o inglés | Habilidades normalizadas (mismo identificador en ambos idiomas) | 4, 6 |
+| 6 | Características | `CV` + `Vacancy` | Las cuatro características de requisitos.md, sección 5 | 5, 6 |
+| 7 | Modelos | Las cuatro características | Probabilidad por clase | 5 |
+| 8 | Puntaje y explicación | Probabilidades + características | `Evaluation` | 6 |
+| 9 | API REST | Peticiones HTTP | JSON | 6 |
+| 10 | Dashboard | API REST | Interfaz web | 7 |
+| 11 | Almacenamiento | Vacantes, evaluaciones, decisiones | SQLite | 6, 8 |
 
 ## 4. Contratos de datos
 

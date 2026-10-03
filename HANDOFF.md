@@ -21,6 +21,8 @@ de Aldo entre fases:
 - Repositorio público en la cuenta de GitHub de Aldo (Aselori).
 - No descargar `es_core_news_md` (Aldo rechazó la descarga); se usa `es_core_news_sm`.
 - Se construyen aquí las fases 1 a 3, fase por fase.
+- Los roles de la actividad 1.3 son nominales; no se asignan responsables por módulo.
+- Fase 1 aprobada por Aldo (2026-10-02).
 
 ## Estado
 
@@ -28,7 +30,7 @@ de Aldo entre fases:
 - Rama `phase-1-requirements`: fase 1 terminada, pendiente de revisión.
   - `docs/requisitos.md`: RF-01 a RF-14, RNF-01 a RNF-08, criterios de evaluación (4
     características y fórmula del puntaje), datos, métricas, alcance, riesgos.
-  - `docs/arquitectura.md`: diagrama Mermaid, componentes del agente, módulos y responsables,
+  - `docs/arquitectura.md`: diagrama Mermaid, componentes del agente, módulos,
     contratos de datos, API propuesta, librerías con versiones, estructura objetivo,
     decisiones D1 a D6.
   - `docs/arquitectura.png`: diagrama exportado (renderizado con Mermaid 11 y Playwright).

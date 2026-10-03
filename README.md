@@ -5,18 +5,16 @@ Semestre agosto - diciembre 2026. Docente: Raquel Martínez Martínez.
 
 Sistema inteligente (agente basado en aprendizaje) que analiza currículums en PDF o DOCX, en
 español o inglés, los compara con los requisitos de una vacante y genera un puntaje de
-idoneidad y un ranking de candidatos. Usa PLN (spaCy), TF-IDF, Naive Bayes y Regresión Logística, y aprende de la
-retroalimentación de los reclutadores.
+idoneidad y un ranking de candidatos. Usa PLN (spaCy), TF-IDF, Naive Bayes y Regresión
+Logística, y aprende de la retroalimentación de los reclutadores.
 
 ## Equipo
 
-| Integrante | Rol |
-|---|---|
-| Ariel Osvaldo Main Acosta | Líder de proyecto y analista |
-| Eduardo Damián Presas Méndez | Ingeniero de datos |
-| Raúl Manzanera Medina | Desarrollador backend |
-| Oziel Segura Delgadillo | Especialista en PLN e IA |
-| Aldo Sebastián López Rivas | Desarrollador frontend y UX |
+- Ariel Osvaldo Main Acosta
+- Eduardo Damián Presas Méndez
+- Raúl Manzanera Medina
+- Oziel Segura Delgadillo
+- Aldo Sebastián López Rivas
 
 ## Documentación
 
