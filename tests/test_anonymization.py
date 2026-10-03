@@ -44,6 +44,13 @@ def test_spanish_cv_removes_personal_data_and_keeps_content():
     assert result.replacements["name"] == 2
 
 
+def test_given_name_alone_is_removed_but_surname_in_company_is_kept():
+    text = "Lucía Garza Montalvo\nSoy Lucía, auxiliar en Despacho Garza y Asociados."
+    result = anonymize(text).text
+    assert "Lucía" not in result
+    assert "Despacho Garza y Asociados" in result
+
+
 def test_english_cv_removes_placeholder_contact_data():
     result = anonymize(ENGLISH_CV)
     text = result.text
@@ -54,7 +61,7 @@ def test_english_cv_removes_placeholder_contact_data():
 
 
 def test_years_are_not_phones():
-    text = "Periodo 2018-2021 y 2021 - 2024, folio 12345. Scholarship 2011-20153.9 GPA"
+    text = "Periodo 2018-2021 y 2021 - 2024, folio 12345. Scholarship 2011-20153.9 GPA 2019 2020"
     assert anonymize(text).text == text
 
 
@@ -81,3 +88,17 @@ def test_us_city_pattern_does_not_swallow_preceding_words():
     text = anonymize("Summary Senior Data Analyst Lawrenceville, GA 30043 SQL").text
     assert text.startswith("Summary Senior Data Analyst ")
     assert "30043" not in text
+
+
+def test_uppercase_header_name_is_removed_in_both_cases():
+    text = "VALERIA SAUCEDO LUNA\nEgresada de sistemas.\nValeria Saucedo Luna hizo prácticas."
+    result = anonymize(text)
+    assert "VALERIA" not in result.text and "Valeria" not in result.text
+    assert result.replacements["name"] == 2
+
+
+def test_name_followed_by_contact_on_same_line():
+    text = "Sofía Elizondo Cantú (81) 5555-0102 · sofia@example.com\nIngeniera de software"
+    result = anonymize(text)
+    assert "Sofía" not in result.text
+    assert result.text.startswith("[NOMBRE] [TELEFONO]")

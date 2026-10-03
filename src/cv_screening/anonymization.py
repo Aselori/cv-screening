@@ -24,9 +24,13 @@ URL_RE = re.compile(
     r"(?:https?://|www\.)\S+|\b(?:linkedin\.com|github\.com|gitlab\.com)/\S+", re.IGNORECASE
 )
 # Candidatos a teléfono; se confirman contando dígitos y descartando rangos de años
-# ("2011-2015" pegado a otro número parece un teléfono de 10 dígitos).
-YEAR_RANGE_RE = re.compile(r"(?:19|20)\d{2}\s*[-–]\s*(?:19|20)\d{2}")
-PHONE_RE = re.compile(r"(?<![\w])(?:\+?\d{1,3}[\s.-]?)?(?:\(\d{2,3}\)|\d{2,3})(?:[\s.-]?\d){7,8}")
+# ("2011-2015" pegado a otro número parece un teléfono de 10 dígitos). Entre grupos de dígitos
+# se aceptan hasta dos separadores, porque en los PDF el número puede partirse en dos líneas:
+# "(81) 5555-\n0114".
+YEAR_RANGE_RE = re.compile(r"(?:19|20)\d{2}\s*[-–\s]\s*(?:19|20)\d{2}")
+PHONE_RE = re.compile(
+    r"(?<![\w])(?:\+?\d{1,3}[\s.-]?)?(?:\(\d{2,3}\)|\d{2,3})(?:[\s.-]{0,2}\d){7,8}"
+)
 POSTAL_CODE_RE = re.compile(
     # México: "C.P. 64000"
     r"\b(?:C\.?\s?P\.?|c[óo]digo postal)\s*:?\s*\d{5}\b"
@@ -64,6 +68,11 @@ class AnonymizationResult:
     replacements: Counter = field(default_factory=Counter)
 
 
+def _is_name_word(word: str) -> bool:
+    # Acepta nombres en mayúsculas ("VALERIA") comparándolos en formato de título.
+    return bool(NAME_WORD_RE.match(word.capitalize() if word.isupper() else word))
+
+
 def looks_like_name(line: str) -> bool:
     """Dos a cinco palabras capitalizadas (con partículas como "de" o "del"), sin dígitos."""
     words = line.strip().split()
@@ -72,15 +81,40 @@ def looks_like_name(line: str) -> bool:
         return False
     if any(w.lower().strip(":,") in NOT_NAME_WORDS for w in words):
         return False
-    return all(NAME_WORD_RE.match(w) for w in content)
+    return all(_is_name_word(w) for w in content)
+
+
+def _leading_name(line: str) -> str | None:
+    """Nombre al inicio de una línea que sigue con otros datos.
+
+    En los PDF con encabezado a dos columnas, el nombre y el teléfono quedan en la misma
+    línea: "Sofía Elizondo Cantú (81) 5555-0102".
+    """
+    tokens = line.split()
+    words = []
+    for word in tokens:
+        if not (_is_name_word(word) or word.lower() in NAME_PARTICLES):
+            break
+        words.append(word)
+    while words and words[-1].lower() in NAME_PARTICLES:
+        words.pop()
+    rest = tokens[len(words) :]
+    # Solo cuenta si lo que sigue es un dato de contacto; si no, frases como "Built REST
+    # APIs" parecerían nombres.
+    if not rest or not (rest[0][0] in "(+|·•-," or rest[0][0].isdigit() or "@" in rest[0]):
+        return None
+    candidate = " ".join(words)
+    return candidate if looks_like_name(candidate) else None
 
 
 def header_name(text: str, max_lines: int = 3) -> str | None:
-    """Devuelve la primera línea del encabezado que parece un nombre de persona."""
+    """Devuelve el nombre de persona en las primeras líneas del encabezado, si lo hay."""
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     for line in lines[:max_lines]:
         if looks_like_name(line):
             return line
+        if name := _leading_name(line):
+            return name
     return None
 
 
@@ -88,6 +122,11 @@ def candidate_names(text: str) -> set[str]:
     names = {m.group(1) for m in NAME_LABEL_RE.finditer(text) if looks_like_name(m.group(1))}
     if name := header_name(text):
         names.add(name)
+    # Un nombre en mayúsculas en el encabezado puede aparecer en formato de título más abajo.
+    names |= {name.title() for name in names if name.isupper()}
+    # El nombre de pila solo ("Soy Daniela") también se quita, porque suele revelar el género
+    # (RNF-02). Los apellidos no, porque coinciden con empresas ("Garza y Asociados").
+    names |= {name.split()[0] for name in names if not name.isupper()}
     return names
 
 

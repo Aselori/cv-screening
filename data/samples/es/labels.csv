@@ -1,0 +1,97 @@
+pair_id,cv_id,vacancy_id,label,pair_type,labeled_by,notes
+cv-01_v-es-01,cv-01,v-es-01,Good Fit,mismo dominio,borrador,Cumple todas las habilidades requeridas y deseables; 4 años.
+cv-01_v-es-02,cv-01,v-es-02,No Fit,otro dominio,borrador,
+cv-01_v-es-03,cv-01,v-es-03,No Fit,otro dominio,borrador,
+cv-01_v-es-04,cv-01,v-es-04,No Fit,otro dominio,borrador,
+cv-02_v-es-01,cv-02,v-es-01,Good Fit,mismo dominio,borrador,"Cumple las requeridas con sinónimos (JS, ReactJS, NodeJS, MySQL, GitHub); 3 años."
+cv-02_v-es-02,cv-02,v-es-02,No Fit,otro dominio,borrador,
+cv-02_v-es-03,cv-02,v-es-03,No Fit,otro dominio,borrador,
+cv-02_v-es-04,cv-02,v-es-04,No Fit,otro dominio,borrador,
+cv-03_v-es-01,cv-03,v-es-01,Potential Fit,mismo dominio,borrador,"React y JavaScript, sin Node.js ni SQL; 1 año (menos de 2)."
+cv-03_v-es-02,cv-03,v-es-02,No Fit,otro dominio,borrador,
+cv-03_v-es-03,cv-03,v-es-03,No Fit,otro dominio,borrador,
+cv-03_v-es-04,cv-03,v-es-04,No Fit,otro dominio,borrador,
+cv-04_v-es-01,cv-04,v-es-01,Potential Fit,mismo dominio,borrador,Backend Java con SQL y Git; poco JavaScript y sin React ni Node.js.
+cv-04_v-es-02,cv-04,v-es-02,No Fit,otro dominio,borrador,
+cv-04_v-es-03,cv-04,v-es-03,No Fit,otro dominio,borrador,
+cv-04_v-es-04,cv-04,v-es-04,No Fit,otro dominio,borrador,
+cv-05_v-es-01,cv-05,v-es-01,No Fit,mismo dominio,borrador,Estudiante sin experiencia; licenciatura en curso.
+cv-05_v-es-02,cv-05,v-es-02,No Fit,otro dominio,borrador,
+cv-05_v-es-03,cv-05,v-es-03,No Fit,otro dominio,borrador,
+cv-05_v-es-04,cv-05,v-es-04,No Fit,otro dominio,borrador,
+cv-06_v-es-01,cv-06,v-es-01,No Fit,mismo dominio,borrador,"Soporte técnico, no desarrollo; carrera técnica."
+cv-06_v-es-02,cv-06,v-es-02,No Fit,otro dominio,borrador,
+cv-06_v-es-03,cv-06,v-es-03,No Fit,otro dominio,borrador,
+cv-06_v-es-04,cv-06,v-es-04,No Fit,otro dominio,borrador,
+cv-07_v-es-01,cv-07,v-es-01,No Fit,otro dominio,borrador,
+cv-07_v-es-02,cv-07,v-es-02,Good Fit,mismo dominio,borrador,"SQL, Python, Power BI, Excel y estadística; 3 años."
+cv-07_v-es-03,cv-07,v-es-03,No Fit,otro dominio,borrador,
+cv-07_v-es-04,cv-07,v-es-04,No Fit,otro dominio,borrador,
+cv-08_v-es-01,cv-08,v-es-01,No Fit,otro dominio,borrador,
+cv-08_v-es-02,cv-08,v-es-02,Good Fit,mismo dominio,borrador,"Requeridas con sinónimos (hojas de cálculo, tableros en Power BI); 2 años; maestría."
+cv-08_v-es-03,cv-08,v-es-03,No Fit,otro dominio,borrador,
+cv-08_v-es-04,cv-08,v-es-04,No Fit,otro dominio,borrador,
+cv-09_v-es-01,cv-09,v-es-01,No Fit,otro dominio,borrador,
+cv-09_v-es-02,cv-09,v-es-02,Potential Fit,mismo dominio,borrador,"Python, SQL y estadística sin Power BI; 6 meses de prácticas (menos de 1 año)."
+cv-09_v-es-03,cv-09,v-es-03,No Fit,otro dominio,borrador,
+cv-09_v-es-04,cv-09,v-es-04,No Fit,otro dominio,borrador,
+cv-10_v-es-01,cv-10,v-es-01,No Fit,otro dominio,borrador,
+cv-10_v-es-02,cv-10,v-es-02,Potential Fit,mismo dominio,borrador,"Excel avanzado y Power BI básico, sin SQL ni Python; perfil financiero."
+cv-10_v-es-03,cv-10,v-es-03,No Fit,otro dominio,borrador,
+cv-10_v-es-04,cv-10,v-es-04,Potential Fit,otro dominio,borrador,"Perfil financiero con Excel avanzado y conciliación de cuentas, sin CFDI."
+cv-11_v-es-01,cv-11,v-es-01,No Fit,otro dominio,borrador,
+cv-11_v-es-02,cv-11,v-es-02,No Fit,mismo dominio,borrador,"Diseño gráfico, sin habilidades de análisis de datos."
+cv-11_v-es-03,cv-11,v-es-03,No Fit,otro dominio,borrador,
+cv-11_v-es-04,cv-11,v-es-04,No Fit,otro dominio,borrador,
+cv-12_v-es-01,cv-12,v-es-01,No Fit,otro dominio,borrador,
+cv-12_v-es-02,cv-12,v-es-02,No Fit,mismo dominio,borrador,Captura de datos con Excel básico; preparatoria.
+cv-12_v-es-03,cv-12,v-es-03,No Fit,otro dominio,borrador,
+cv-12_v-es-04,cv-12,v-es-04,No Fit,otro dominio,borrador,
+cv-13_v-es-01,cv-13,v-es-01,No Fit,otro dominio,borrador,
+cv-13_v-es-02,cv-13,v-es-02,No Fit,otro dominio,borrador,
+cv-13_v-es-03,cv-13,v-es-03,Good Fit,mismo dominio,borrador,"Prospección, negociación, Salesforce, atención al cliente e inglés; 5 años."
+cv-13_v-es-04,cv-13,v-es-04,No Fit,otro dominio,borrador,
+cv-14_v-es-01,cv-14,v-es-01,No Fit,otro dominio,borrador,
+cv-14_v-es-02,cv-14,v-es-02,No Fit,otro dominio,borrador,
+cv-14_v-es-03,cv-14,v-es-03,Good Fit,mismo dominio,borrador,"Requeridas con sinónimos (búsqueda de clientes, HubSpot, servicio al cliente); 3 años."
+cv-14_v-es-04,cv-14,v-es-04,No Fit,otro dominio,borrador,
+cv-15_v-es-01,cv-15,v-es-01,No Fit,otro dominio,borrador,
+cv-15_v-es-02,cv-15,v-es-02,No Fit,otro dominio,borrador,
+cv-15_v-es-03,cv-15,v-es-03,Potential Fit,mismo dominio,borrador,"Atención al cliente y ventas de mostrador, sin prospección B2B ni CRM; licenciatura trunca."
+cv-15_v-es-04,cv-15,v-es-04,No Fit,otro dominio,borrador,
+cv-16_v-es-01,cv-16,v-es-01,No Fit,otro dominio,borrador,
+cv-16_v-es-02,cv-16,v-es-02,No Fit,otro dominio,borrador,
+cv-16_v-es-03,cv-16,v-es-03,Potential Fit,mismo dominio,borrador,Prospección y CRM; 1 año (menos de 2); ventas por teléfono.
+cv-16_v-es-04,cv-16,v-es-04,No Fit,otro dominio,borrador,
+cv-17_v-es-01,cv-17,v-es-01,No Fit,otro dominio,borrador,
+cv-17_v-es-02,cv-17,v-es-02,No Fit,otro dominio,borrador,
+cv-17_v-es-03,cv-17,v-es-03,No Fit,mismo dominio,borrador,"Cocina, sin experiencia en ventas."
+cv-17_v-es-04,cv-17,v-es-04,No Fit,otro dominio,borrador,
+cv-18_v-es-01,cv-18,v-es-01,No Fit,otro dominio,borrador,
+cv-18_v-es-02,cv-18,v-es-02,No Fit,otro dominio,borrador,
+cv-18_v-es-03,cv-18,v-es-03,No Fit,mismo dominio,borrador,"Almacén, sin experiencia en ventas; secundaria."
+cv-18_v-es-04,cv-18,v-es-04,No Fit,otro dominio,borrador,
+cv-19_v-es-01,cv-19,v-es-01,No Fit,otro dominio,borrador,
+cv-19_v-es-02,cv-19,v-es-02,No Fit,otro dominio,borrador,
+cv-19_v-es-03,cv-19,v-es-03,No Fit,otro dominio,borrador,
+cv-19_v-es-04,cv-19,v-es-04,Good Fit,mismo dominio,borrador,"Contabilidad, conciliaciones, CFDI 4.0, Excel y CONTPAQi; 3 años."
+cv-20_v-es-01,cv-20,v-es-01,No Fit,otro dominio,borrador,
+cv-20_v-es-02,cv-20,v-es-02,No Fit,otro dominio,borrador,
+cv-20_v-es-03,cv-20,v-es-03,No Fit,otro dominio,borrador,
+cv-20_v-es-04,cv-20,v-es-04,Good Fit,mismo dominio,borrador,Requeridas con sinónimos (facturación electrónica por CFDI) y SAP; 2 años; técnico.
+cv-21_v-es-01,cv-21,v-es-01,No Fit,otro dominio,borrador,
+cv-21_v-es-02,cv-21,v-es-02,No Fit,otro dominio,borrador,
+cv-21_v-es-03,cv-21,v-es-03,No Fit,otro dominio,borrador,
+cv-21_v-es-04,cv-21,v-es-04,Potential Fit,mismo dominio,borrador,Contabilidad básica y CONTPAQi; 6 meses de prácticas (menos de 1 año).
+cv-22_v-es-01,cv-22,v-es-01,No Fit,otro dominio,borrador,
+cv-22_v-es-02,cv-22,v-es-02,No Fit,otro dominio,borrador,
+cv-22_v-es-03,cv-22,v-es-03,Potential Fit,otro dominio,borrador,"Atención al cliente y colocación de productos con metas, sin prospección B2B ni CRM."
+cv-22_v-es-04,cv-22,v-es-04,Potential Fit,mismo dominio,borrador,"Cuadre de caja y Excel básico, sin contabilidad ni CFDI."
+cv-23_v-es-01,cv-23,v-es-01,No Fit,otro dominio,borrador,
+cv-23_v-es-02,cv-23,v-es-02,No Fit,otro dominio,borrador,
+cv-23_v-es-03,cv-23,v-es-03,No Fit,otro dominio,borrador,
+cv-23_v-es-04,cv-23,v-es-04,No Fit,mismo dominio,borrador,"Enfermería, sin habilidades contables."
+cv-24_v-es-01,cv-24,v-es-01,Potential Fit,otro dominio,borrador,"JavaScript, React básico y Git, pero experiencia principal en móvil; sin Node.js ni SQL."
+cv-24_v-es-02,cv-24,v-es-02,No Fit,otro dominio,borrador,
+cv-24_v-es-03,cv-24,v-es-03,No Fit,otro dominio,borrador,
+cv-24_v-es-04,cv-24,v-es-04,No Fit,mismo dominio,borrador,"Desarrollo móvil, sin habilidades contables."
