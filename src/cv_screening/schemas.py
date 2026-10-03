@@ -91,6 +91,8 @@ class LabeledPair(BaseModel):
     """Par CV-vacante etiquetado, para entrenar o evaluar los modelos."""
 
     pair_id: str
+    cv_id: str
+    vacancy_id: str
     cv_text: str
     vacancy_text: str
     label: FitLabel
