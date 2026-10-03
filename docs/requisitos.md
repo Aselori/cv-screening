@@ -106,7 +106,7 @@ necesitan más características, se agregan solo si tampoco dependen del idioma.
 | Uso | Fuente | Contenido |
 |---|---|---|
 | Entrenamiento y prueba | [cnamuangtoun/resume-job-description-fit](https://huggingface.co/datasets/cnamuangtoun/resume-job-description-fit) (Hugging Face) | 8,000 pares CV-vacante en inglés: 6,241 de entrenamiento y 1,759 de prueba. Etiquetas en el entrenamiento: No Fit 3,143, Potential Fit 1,556, Good Fit 1,542. |
-| Evaluación en español | Conjunto propio: vacantes y CVs ficticios en español, en PDF y DOCX, etiquetados por el equipo como Apto, Posible o No apto | Propuesta: 4 vacantes con 15 CVs cada una (60 pares). Se prepara en la fase 2 y también sirve para probar el parser. |
+| Evaluación en español | Conjunto propio: 4 vacantes y 24 CVs ficticios en español, en PDF y DOCX, con etiquetas que el equipo revisa | 96 pares (cada CV contra las 4 vacantes); 24 son del mismo dominio. También sirve para probar el parser. Detalle en `data/README.md`. |
 
 Limitaciones conocidas, que se documentan en el reporte:
 
@@ -115,8 +115,8 @@ Limitaciones conocidas, que se documentan en el reporte:
 - Las clases están desbalanceadas (la mitad son No Fit), por lo que se reporta F1 macro y no
   solo accuracy.
 - El entrenamiento es en inglés. El desempeño en español se mide solo con el conjunto propio
-  de 60 pares, que es pequeño; el reporte presenta ese resultado como indicativo, no como
-  definitivo.
+  de 96 pares, que es pequeño (y de esos, solo 24 son del mismo dominio); el reporte presenta
+  ese resultado como indicativo, no como definitivo.
 
 ## 7. Medidas de rendimiento del agente
 
@@ -141,6 +141,6 @@ Tomadas de la actividad 2.1:
 |---|---|
 | Las etiquetas del conjunto de datos no reflejan criterios reales de una empresa. | Se presenta como limitación; la retroalimentación del reclutador (RF-11, RF-12) adapta el modelo a criterios propios. |
 | Las características calculadas en español se distribuyen distinto que en inglés (por ejemplo, la similitud de textos), y el modelo entrenado en inglés pierde precisión. | Se mide con el conjunto propio en español; si la diferencia es grande, se ajustan las características o se reentrena con la retroalimentación en español (RF-12). |
-| El modelo pequeño de spaCy en español reconoce mal los nombres de personas (en una prueba marcó una empresa como persona). | La anonimización se basa en patrones (correo, teléfono, URLs) y en la estructura del CV (el nombre suele estar en el encabezado), con el reconocimiento de entidades solo como apoyo. Se mide en la fase 2. |
+| El reconocimiento de entidades de spaCy confunde personas con empresas y habilidades (medido en la fase 2). | Se descartó para anonimizar; se usan patrones y la estructura del CV. Medición: 48 de 48 documentos del conjunto propio quedan sin datos personales y 0 nombres falsos en los CVs de entrenamiento (`data/README.md`). |
 | Los CVs tienen formatos muy variados y el parser no detecta todas las secciones. | Si no se detectan secciones, el CV completo se trata como un solo bloque y se evalúa igual. |
 | El equipo va atrasado respecto al cronograma original (fases 2 y 3 vencían en septiembre). | Se propone recuperar las fases 1 a 3 al regresar del periodo de exámenes de medio curso (pendiente de confirmar con el equipo); el reporte de avance 3.2 presenta el cronograma ajustado. |
