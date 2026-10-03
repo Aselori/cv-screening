@@ -24,8 +24,7 @@ Logística, y aprende de la retroalimentación de los reclutadores.
 
 ## Instalación
 
-Requisitos: Python 3.12 o superior (el repositorio fija 3.14 con [mise](https://mise.jdx.dev/),
-opcional) y Git.
+Requisitos: Python 3.12 o superior y Git.
 
 Linux o macOS:
 

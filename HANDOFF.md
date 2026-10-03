@@ -13,7 +13,7 @@ de Aldo entre fases:
 
 ## Decisiones de Aldo (2026-10-02)
 
-- Repositorio de código en `~/Work/projects/cv-screening`, separado del repo del curso.
+- Repositorio de código separado del repositorio del curso.
 - Stack: FastAPI + React/Vite.
 - Enfoque en español con inglés también soportado ("ambos"). Entrenamiento con el conjunto en
   inglés usando solo características independientes del idioma (D7); desempeño en español
@@ -26,7 +26,7 @@ de Aldo entre fases:
 
 ## Estado
 
-- Rama `main`: commit inicial con la estructura (pyproject, mise, pytest, ruff, prueba básica).
+- Rama `main`: commit inicial con la estructura (pyproject, pytest, ruff, prueba básica).
 - Rama `phase-1-requirements`: fase 1 terminada, pendiente de revisión.
   - `docs/requisitos.md`: RF-01 a RF-14, RNF-01 a RNF-08, criterios de evaluación (4
     características y fórmula del puntaje), datos, métricas, alcance, riesgos.

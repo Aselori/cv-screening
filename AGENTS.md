@@ -6,11 +6,10 @@ Instrucciones para asistentes de código (Codex, Claude Code y similares) en est
 
 - Proyecto de equipo del Laboratorio de Temas Selectos de Sistemas Inteligentes (LBTSSI),
   FIME UANL, agosto - diciembre 2026. Docente: Raquel Martínez Martínez.
-- Las actividades del curso (reportes .docx) y la rúbrica están en
-  `~/Work/uni/sisint/` (`team-activities/` y `resources/LB_SISINT_PracticasAgo-Dic2025.xlsx`).
-  Este repositorio solo contiene el código y su documentación técnica.
-- El cronograma de 9 fases está en la actividad 1.3 (`team-activities/LBTSSI1234567A03.docx`).
-  Los requerimientos y la arquitectura están en `docs/`.
+- Los reportes del curso y la rúbrica se manejan fuera de este repositorio. Aquí solo están el
+  código y su documentación técnica.
+- El cronograma de 9 fases está en la actividad 1.3 (Definición del proyecto). Los
+  requerimientos y la arquitectura están en `docs/`.
 - Los roles por integrante de la actividad 1.3 son nominales: no indican quién hace cada
   parte. No asignar responsables por módulo en la documentación.
 
@@ -30,7 +29,7 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
 
 ## Entorno y comandos
 
-- Python 3.12 o superior (fijado en 3.14 con mise). Entorno virtual en `.venv/`.
+- Python 3.12 o superior (probado con 3.14). Entorno virtual en `.venv/`.
 - Instalación: `pip install -e ".[dev]"`, `python -m spacy download es_core_news_sm` y
   `python -m spacy download en_core_web_sm`.
 - Antes de cada commit: `ruff check .`, `ruff format --check .` y `pytest`.
