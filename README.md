@@ -53,13 +53,26 @@ pytest
 ruff check .
 ```
 
+## Uso
+
+Procesar CVs (PDF o DOCX) a JSON, anonimizados y divididos en secciones:
+
+```bash
+python -m cv_screening.pipeline data/samples/es/pdf --out salida/
+```
+
+Se genera un JSON por CV y `errors.json` con los archivos que no se pudieron leer. Los datos de
+entrenamiento se describen en [data/README.md](data/README.md).
+
 ## Estructura
 
 ```
+data/             descripción de los datos y conjunto propio en español (samples/es)
 docs/             requerimientos, arquitectura y decisiones
+scripts/          utilidades de desarrollo (generar los CVs de muestra)
 src/cv_screening/ código del sistema (paquete de Python)
 tests/            pruebas automatizadas (pytest)
 ```
 
-Las carpetas `data/` (fase 2), los módulos de parsing (fase 3) y el dashboard (fase 7) se
-agregan en sus fases correspondientes.
+El resto de los módulos (PLN, modelos, API y dashboard) se agrega en sus fases; la estructura
+objetivo está en [docs/arquitectura.md](docs/arquitectura.md), sección 7.
