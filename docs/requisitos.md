@@ -11,9 +11,11 @@ de una vacante, extrae su información, la compara con los requisitos del puesto
 ranking de candidatos con un puntaje de idoneidad de 0 a 100 y la explicación de ese puntaje.
 La decisión final de contratación siempre es del reclutador: el sistema prioriza, no descarta.
 
-Idioma: la interfaz y la documentación están en español. Los currículums y vacantes que el
-sistema analiza están en **inglés**, porque los datos etiquetados públicos disponibles para
-entrenar los modelos están en inglés (ver sección 6).
+Idioma: el sistema está enfocado en **español**. La interfaz, la documentación, los
+currículums y las vacantes son en español como caso principal, y los documentos en **inglés**
+también se aceptan. Como los únicos datos etiquetados públicos disponibles están en inglés, los
+modelos se entrenan con características que no dependen del idioma (sección 5), y el
+desempeño en español se mide con un conjunto propio del equipo (sección 6).
 
 ## 2. Usuarios y flujo de uso
 
@@ -42,13 +44,14 @@ Usuario principal: reclutador de Recursos Humanos.
 | RF-04 | Informar por archivo los errores de carga: formato no soportado, archivo dañado o PDF sin texto extraíble (por ejemplo, escaneado). Un error no detiene el resto del lote. | 3 | Alta |
 | RF-05 | Anonimizar cada CV antes de evaluarlo: eliminar nombre, correo, teléfono, dirección y URLs personales. | 2-4 | Alta |
 | RF-06 | Preprocesar el texto con PLN: limpieza, normalización, tokenización, eliminación de palabras vacías y lematización. | 4 | Alta |
-| RF-07 | Normalizar habilidades con una base de conocimiento de sinónimos y equivalencias (por ejemplo, "spreadsheets" y "advanced excel" se reconocen como la habilidad `excel`). | 4-6 | Alta |
+| RF-07 | Normalizar habilidades con una base de conocimiento de sinónimos y equivalencias en español e inglés (por ejemplo, "manejo de hojas de cálculo", "Excel avanzado" y "spreadsheets" se reconocen como la habilidad `excel`). | 4-6 | Alta |
 | RF-08 | Calcular para cada par CV-vacante las características de la sección 5 y un puntaje de idoneidad de 0 a 100. | 5-6 | Alta |
 | RF-09 | Explicar cada puntaje: habilidades requeridas encontradas y faltantes, años de experiencia detectados y nivel educativo detectado. | 6-7 | Alta |
 | RF-10 | Mostrar el ranking de candidatos por vacante, con ordenamiento, búsqueda y filtros por rango de puntaje, habilidades y experiencia. | 7 | Alta |
 | RF-11 | Registrar la decisión del reclutador por candidato: Apto, Posible o No apto. | 7 | Media |
 | RF-12 | Reentrenar el modelo con el conjunto base más la retroalimentación acumulada, bajo demanda, y conservar la versión anterior si la nueva tiene peores métricas. | 8 | Media |
 | RF-13 | Mostrar las métricas del modelo vigente: accuracy, precision, recall y F1. | 7-8 | Media |
+| RF-14 | Detectar el idioma de cada CV y vacante (español o inglés) y procesarlo con el modelo de PLN correspondiente. Un documento en otro idioma se rechaza con un mensaje claro. | 4 | Alta |
 
 ## 4. Requerimientos no funcionales
 
@@ -66,21 +69,24 @@ Usuario principal: reclutador de Recursos Humanos.
 ## 5. Criterios de evaluación de perfiles
 
 Cada CV se evalúa contra una vacante con cuatro características. Todas se calculan después de
-anonimizar el CV.
+anonimizar el CV y **no dependen del idioma**: cada una compara el CV con su propia vacante, y
+el resultado es un número que significa lo mismo en español o en inglés. Por eso un modelo
+entrenado con pares en inglés puede evaluar pares en español.
 
 | Característica | Cálculo | Rango |
 |---|---|---|
-| `text_similarity` | Similitud coseno entre los vectores TF-IDF del CV y de la vacante (texto preprocesado y lematizado). | 0 a 1 |
+| `text_similarity` | Similitud coseno entre los vectores TF-IDF del CV y de la vacante, con el texto preprocesado y lematizado en su idioma. | 0 a 1 |
 | `skill_coverage` | Habilidades de la vacante presentes en el CV, normalizadas con la base de conocimiento. Las deseables pesan la mitad: (requeridas encontradas + 0.5 × deseables encontradas) / (requeridas + 0.5 × deseables). Si la vacante no lista habilidades, vale 1. | 0 a 1 |
-| `experience_fit` | Años de experiencia detectados en el CV entre los años mínimos requeridos, con tope en 1. Si la vacante no indica años, vale 1. | 0 a 1 |
-| `education_fit` | 1 si el nivel educativo detectado alcanza el mínimo requerido o si la vacante no pide uno, 0.5 si es un nivel inferior, 0 si no se detecta. Niveles: bachillerato, técnico, licenciatura, maestría, doctorado. | 0, 0.5 o 1 |
+| `experience_fit` | Años de experiencia detectados en el CV ("5 años", "5 years" o periodos como "2021-2024") entre los años mínimos requeridos, con tope en 1. Si la vacante no indica años, vale 1. | 0 a 1 |
+| `education_fit` | 1 si el nivel educativo detectado alcanza el mínimo requerido o si la vacante no pide uno, 0.5 si es un nivel inferior, 0 si no se detecta. Niveles: bachillerato, técnico, licenciatura, maestría, doctorado, con sus equivalentes en inglés (high school, associate, bachelor, master, PhD). | 0, 0.5 o 1 |
 
 **Clases.** Cada par CV-vacante pertenece a una de tres clases: `Good Fit`, `Potential Fit` o
 `No Fit` (las etiquetas del conjunto de datos). En la interfaz se muestran como Apto, Posible y
 No apto.
 
 **Puntaje de idoneidad.** El modelo de Regresión Logística estima la probabilidad de cada clase
-a partir de las características anteriores y de los vectores TF-IDF. El puntaje es:
+a partir de las cuatro características anteriores. No usa las palabras del texto como
+características directas, porque esas sí dependen del idioma. El puntaje es:
 
 ```
 puntaje = 100 × ( P(Good Fit) + 0.5 × P(Potential Fit) )
@@ -89,18 +95,18 @@ puntaje = 100 × ( P(Good Fit) + 0.5 × P(Potential Fit) )
 El ranking ordena por puntaje; en empate, por `skill_coverage`. La fórmula es la
 propuesta inicial y se revisa en la fase 5 con las métricas reales.
 
-**Modelos.** Naive Bayes multinomial sobre TF-IDF funciona como línea base. La Regresión
-Logística es el modelo principal. También se compara contra una línea base sin aprendizaje que
-solo usa `text_similarity`. El modelo principal se acepta si supera a ambas líneas base en F1
-macro sobre el conjunto de prueba; la meta numérica se fija en la fase 5 al medir las líneas
-base.
+**Modelos.** La Regresión Logística es el modelo principal y Naive Bayes (gaussiano, sobre las
+mismas características) es el modelo de comparación. Ambos se comparan contra una línea base sin
+aprendizaje que solo usa `text_similarity`. El modelo elegido debe superar a la línea base en F1
+macro; la meta numérica se fija en la fase 5 al medir las líneas base. Si en la fase 5 se
+necesitan más características, se agregan solo si tampoco dependen del idioma.
 
 ## 6. Datos
 
 | Uso | Fuente | Contenido |
 |---|---|---|
 | Entrenamiento y prueba | [cnamuangtoun/resume-job-description-fit](https://huggingface.co/datasets/cnamuangtoun/resume-job-description-fit) (Hugging Face) | 8,000 pares CV-vacante en inglés: 6,241 de entrenamiento y 1,759 de prueba. Etiquetas en el entrenamiento: No Fit 3,143, Potential Fit 1,556, Good Fit 1,542. |
-| Pruebas del parser | Currículums de muestra en PDF y DOCX creados por el equipo con datos ficticios | Se preparan en la fase 2. |
+| Evaluación en español | Conjunto propio: vacantes y CVs ficticios en español, en PDF y DOCX, etiquetados por el equipo como Apto, Posible o No apto | Propuesta: 4 vacantes con 15 CVs cada una (60 pares). Se prepara en la fase 2 y también sirve para probar el parser. |
 
 Limitaciones conocidas, que se documentan en el reporte:
 
@@ -108,20 +114,23 @@ Limitaciones conocidas, que se documentan en el reporte:
   etiquetas no está documentado. Se usa con fines académicos y se cita la fuente.
 - Las clases están desbalanceadas (la mitad son No Fit), por lo que se reporta F1 macro y no
   solo accuracy.
-- Los datos están en inglés; evaluar CVs en español queda fuera del alcance.
+- El entrenamiento es en inglés. El desempeño en español se mide solo con el conjunto propio
+  de 60 pares, que es pequeño; el reporte presenta ese resultado como indicativo, no como
+  definitivo.
 
 ## 7. Medidas de rendimiento del agente
 
 Tomadas de la actividad 2.1:
 
-- Accuracy, precision, recall y F1 (macro y por clase) sobre el conjunto de prueba.
+- Accuracy, precision, recall y F1 (macro y por clase), reportadas por separado para el
+  conjunto de prueba en inglés (1,759 pares) y el conjunto propio en español.
 - Tiempo de procesamiento por CV (RNF-03).
 - Satisfacción de los reclutadores, medida en las pruebas de usabilidad (RNF-07).
 
 ## 8. Fuera de alcance
 
 - Reconocimiento óptico de caracteres (OCR) para CVs escaneados: se reportan como error (RF-04).
-- Currículums en idiomas distintos al inglés.
+- Currículums en idiomas distintos al español y al inglés.
 - Cuentas de usuario, permisos y despliegue en la nube: el sistema se ejecuta localmente para
   la demostración.
 - Integración con sistemas de RH de terceros.
@@ -131,5 +140,7 @@ Tomadas de la actividad 2.1:
 | Riesgo | Mitigación |
 |---|---|
 | Las etiquetas del conjunto de datos no reflejan criterios reales de una empresa. | Se presenta como limitación; la retroalimentación del reclutador (RF-11, RF-12) adapta el modelo a criterios propios. |
+| Las características calculadas en español se distribuyen distinto que en inglés (por ejemplo, la similitud de textos), y el modelo entrenado en inglés pierde precisión. | Se mide con el conjunto propio en español; si la diferencia es grande, se ajustan las características o se reentrena con la retroalimentación en español (RF-12). |
+| El modelo pequeño de spaCy en español reconoce mal los nombres de personas (en una prueba marcó una empresa como persona). | La anonimización se basa en patrones (correo, teléfono, URLs) y en la estructura del CV (el nombre suele estar en el encabezado), con el reconocimiento de entidades solo como apoyo. Se mide en la fase 2. |
 | Los CVs tienen formatos muy variados y el parser no detecta todas las secciones. | Si no se detectan secciones, el CV completo se trata como un solo bloque y se evalúa igual. |
 | El equipo va atrasado respecto al cronograma original (fases 2 y 3 vencían en septiembre). | Se propone recuperar las fases 1 a 3 al regresar del periodo de exámenes de medio curso (pendiente de confirmar con el equipo); el reporte de avance 3.2 presenta el cronograma ajustado. |

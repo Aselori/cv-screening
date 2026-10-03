@@ -16,18 +16,21 @@ Instrucciones para asistentes de código (Codex, Claude Code y similares) en est
 
 Ver `docs/arquitectura.md`, sección 8. En resumen:
 
-- Los CVs y vacantes analizados están en inglés; la interfaz, documentación, comentarios y
-  mensajes de commit están en español. Los identificadores (variables, funciones, archivos,
-  campos JSON, ramas) están en inglés.
+- Enfoque en español: CVs, vacantes, interfaz, documentación, comentarios y mensajes de commit
+  en español. Los CVs y vacantes en inglés también se aceptan. Los identificadores (variables,
+  funciones, archivos, campos JSON, ramas) están en inglés.
 - Clasificación de pares CV-vacante en `Good Fit`, `Potential Fit` y `No Fit`, con el conjunto
   de datos `cnamuangtoun/resume-job-description-fit` de Hugging Face.
-- Regresión Logística como modelo principal, Naive Bayes y similitud coseno como líneas base.
+- Los modelos usan solo las cuatro características que no dependen del idioma (D7):
+  Regresión Logística como principal, Naive Bayes como comparación y similitud coseno como
+  línea base. Se entrenan en inglés y se miden también con un conjunto propio en español.
 - Backend Python + FastAPI, dashboard React + Vite + TypeScript, SQLite local.
 
 ## Entorno y comandos
 
 - Python 3.12 o superior (fijado en 3.14 con mise). Entorno virtual en `.venv/`.
-- Instalación: `pip install -e ".[dev]"` y `python -m spacy download en_core_web_sm`.
+- Instalación: `pip install -e ".[dev]"`, `python -m spacy download es_core_news_sm` y
+  `python -m spacy download en_core_web_sm`.
 - Antes de cada commit: `ruff check .`, `ruff format --check .` y `pytest`.
 
 ## Reglas

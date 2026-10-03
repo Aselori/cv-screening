@@ -3,9 +3,9 @@
 Proyecto del **Laboratorio de Temas Selectos de Sistemas Inteligentes** (LBTSSI), FIME, UANL.
 Semestre agosto - diciembre 2026. Docente: Raquel Martínez Martínez.
 
-Sistema inteligente (agente basado en aprendizaje) que analiza currículums en PDF o DOCX, los
-compara con los requisitos de una vacante y genera un puntaje de idoneidad y un ranking de
-candidatos. Usa PLN (spaCy), TF-IDF, Naive Bayes y Regresión Logística, y aprende de la
+Sistema inteligente (agente basado en aprendizaje) que analiza currículums en PDF o DOCX, en
+español o inglés, los compara con los requisitos de una vacante y genera un puntaje de
+idoneidad y un ranking de candidatos. Usa PLN (spaCy), TF-IDF, Naive Bayes y Regresión Logística, y aprende de la
 retroalimentación de los reclutadores.
 
 ## Equipo
@@ -35,6 +35,7 @@ Linux o macOS:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+python -m spacy download es_core_news_sm
 python -m spacy download en_core_web_sm
 ```
 
@@ -44,6 +45,7 @@ Windows (PowerShell):
 py -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
+python -m spacy download es_core_news_sm
 python -m spacy download en_core_web_sm
 ```
 

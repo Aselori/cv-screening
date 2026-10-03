@@ -26,17 +26,17 @@ flowchart TD
         ING["1. Ingesta<br/>PDF: pdfplumber · DOCX: python-docx"]
         PAR["2. Parsing<br/>secciones a JSON (esquema CV)"]
         ANO["3. Anonimización<br/>regex + NER de spaCy"]
-        PLN["4. Preprocesamiento PLN<br/>limpieza · lematización (spaCy)"]
-        KB["5. Base de conocimiento<br/>sinónimos de habilidades"]
+        PLN["4. Preprocesamiento PLN<br/>detección de idioma (es/en)<br/>limpieza · lematización (spaCy)"]
+        KB["5. Base de conocimiento<br/>sinónimos de habilidades es/en"]
         FEAT["6. Características<br/>TF-IDF coseno · cobertura · experiencia · educación"]
-        ML["7. Modelos<br/>Regresión Logística (principal)<br/>Naive Bayes (línea base)"]
+        ML["7. Modelos<br/>Regresión Logística (principal)<br/>Naive Bayes (comparación)"]
         SC["8. Puntaje y explicación<br/>0 a 100 + habilidades encontradas y faltantes"]
     end
 
     subgraph ST["Almacenamiento local"]
         DB[("SQLite<br/>vacantes · evaluaciones · retroalimentación")]
         MOD[("Modelo entrenado<br/>joblib + métricas")]
-        DS[("Conjunto de datos<br/>Hugging Face, 8,000 pares")]
+        DS[("Conjuntos de datos<br/>Hugging Face, 8,000 pares (en)<br/>propio del equipo, 60 pares (es)")]
     end
 
     REC --> UI
@@ -71,10 +71,10 @@ sistema:
 | 1 | Ingesta | Archivo PDF o DOCX | Texto plano o error por archivo | 3 | Raúl |
 | 2 | Parsing | Texto plano | `CV` en JSON con secciones | 3 | Raúl |
 | 3 | Anonimización | `CV` | `CV` sin datos personales | 2, 4 | Eduardo, Oziel |
-| 4 | Preprocesamiento PLN | Texto | Tokens lematizados sin palabras vacías | 4 | Oziel |
-| 5 | Base de conocimiento | Habilidades en texto libre | Habilidades normalizadas | 4, 6 | Oziel |
+| 4 | Preprocesamiento PLN | Texto | Idioma detectado (es/en) y tokens lematizados sin palabras vacías | 4 | Oziel |
+| 5 | Base de conocimiento | Habilidades en texto libre, en español o inglés | Habilidades normalizadas (mismo identificador en ambos idiomas) | 4, 6 | Oziel |
 | 6 | Características | `CV` + `Vacancy` | Las cuatro características de requisitos.md, sección 5 | 5, 6 | Oziel |
-| 7 | Modelos | Características + TF-IDF | Probabilidad por clase | 5 | Oziel |
+| 7 | Modelos | Las cuatro características | Probabilidad por clase | 5 | Oziel |
 | 8 | Puntaje y explicación | Probabilidades + características | `Evaluation` | 6 | Oziel |
 | 9 | API REST | Peticiones HTTP | JSON | 6 | Raúl |
 | 10 | Dashboard | API REST | Interfaz web | 7 | Aldo |
@@ -138,7 +138,7 @@ Versiones verificadas al instalar el proyecto el 2 de octubre de 2026 con Python
 | Lenguaje | Python | 3.12 o superior | Ecosistema estándar de PLN y aprendizaje automático. |
 | Texto de PDF | pdfplumber | 0.11.10 | Extrae texto respetando el orden de las líneas; licencia MIT. |
 | Texto de DOCX | python-docx | 1.x | Lee párrafos y tablas de Word; licencia MIT. |
-| PLN | spaCy + `en_core_web_sm` | 3.8.16 / 3.8.0 | Lematización y reconocimiento de entidades (personas, organizaciones, fechas) para anonimizar. |
+| PLN | spaCy + `es_core_news_sm` y `en_core_web_sm` | 3.8.16 / 3.8.0 | Lematización en ambos idiomas y listas de palabras vacías. El reconocimiento de entidades apoya la anonimización; en español el modelo pequeño es poco confiable para nombres, por lo que no se usa como único mecanismo. |
 | Modelos | scikit-learn | 1.9.1 | `TfidfVectorizer`, `MultinomialNB`, `LogisticRegression` y métricas en una sola librería. |
 | Datos | pandas, huggingface-hub | 3.0.6 | Descarga y manejo del conjunto de datos. |
 | Contratos | Pydantic | 2.13.5 | Validación y esquema JSON compartido entre backend y dashboard. |
@@ -173,9 +173,10 @@ tests/                 pruebas
 
 | # | Decisión | Motivo | Alternativa descartada |
 |---|---|---|---|
-| D1 | CVs y vacantes en inglés; interfaz y documentación en español. | El único conjunto de datos público etiquetado encontrado está en inglés. | CVs en español con datos sintéticos o traducidos: etiquetas menos confiables y más trabajo. |
+| D1 | Sistema enfocado en español, con inglés también soportado. El entrenamiento usa el conjunto en inglés y el desempeño en español se mide con un conjunto propio. | Los usuarios y el curso son de México, pero el único conjunto de datos público etiquetado encontrado está en inglés. | Solo inglés: no corresponde al contexto del proyecto. Traducir los CVs al inglés: requiere un modelo de traducción pesado o un servicio en la nube que rompe la privacidad (RNF-01). |
 | D2 | Clasificar pares CV-vacante (Good, Potential, No Fit) en lugar de clasificar CVs por categoría. | Corresponde directamente al puntaje de idoneidad y hay etiquetas para entrenarlo. | Clasificar por área profesional: no responde si el candidato encaja en la vacante. |
-| D3 | Base de conocimiento de sinónimos de habilidades además de TF-IDF. | TF-IDF solo compara palabras y no reconoce equivalencias como "spreadsheets" y "excel". | Embeddings con redes neuronales: fuera del enfoque de aprendizaje automático tradicional definido en la actividad 1.3. |
+| D3 | Base de conocimiento bilingüe de sinónimos de habilidades además de TF-IDF. | TF-IDF solo compara palabras y no reconoce equivalencias como "hojas de cálculo" y "Excel", ni entre idiomas. | Embeddings con redes neuronales: fuera del enfoque de aprendizaje automático tradicional definido en la actividad 1.3. |
 | D4 | Backend FastAPI y dashboard React separados. | Contrato JSON claro entre el motor y la interfaz; cada parte se desarrolla en paralelo. | Streamlit: más rápido de construir, pero con poco control sobre la interfaz. |
 | D5 | Todo se ejecuta localmente con SQLite. | Privacidad de los CVs (RNF-01) y cero costo de infraestructura. | Base de datos o despliegue en la nube: fuera de alcance. |
 | D6 | Repositorio de código separado del repositorio del curso. | Lo comparte todo el equipo en GitHub. | Código dentro de la carpeta del curso. |
+| D7 | Los modelos usan solo características que no dependen del idioma, no las palabras del texto. | Permite entrenar con pares en inglés y evaluar pares en español con el mismo modelo. | Usar también los vectores TF-IDF como características: posiblemente más preciso en inglés, pero inútil en español. |
