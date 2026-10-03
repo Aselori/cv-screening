@@ -9,7 +9,7 @@ de Aldo entre fases:
 
 1. Requerimientos, criterios de evaluación de perfiles y arquitectura. **Aprobada, en `main`.**
 2. Conjunto de datos preparado. **Aprobada, en `main`.**
-3. Módulo de carga y parsing de PDF y DOCX. **Terminada, pendiente de revisión.**
+3. Módulo de carga y parsing de PDF y DOCX. **Aprobada, en `main`.**
 
 ## Decisiones de Aldo (2026-10-02)
 
@@ -23,8 +23,7 @@ de Aldo entre fases:
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 y 2 integradas con merges `--no-ff`.
-- `phase-3-parsing` (local, sin subir): sale de `main`.
+- `main` (en GitHub): fases 1, 2 y 3 integradas con merges `--no-ff`.
 
 ## Fase 3: hecho
 
@@ -56,7 +55,7 @@ de Aldo entre fases:
 
 ## Pendiente de Aldo
 
-- Revisar la fase 3 y autorizar push y merge de `phase-3-parsing`.
+- Elegir lo siguiente: reporte 3.2 (y su fecha de entrega) o fase 4.
 - Decidir React + Vite o Next.js (puede esperar a la fase 7).
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
