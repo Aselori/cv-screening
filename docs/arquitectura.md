@@ -25,7 +25,7 @@ flowchart TD
         API["API REST"]
         ING["1. Ingesta<br/>PDF: pdfplumber · DOCX: python-docx"]
         PAR["2. Parsing<br/>secciones a JSON (esquema CV)"]
-        ANO["3. Anonimización<br/>regex + NER de spaCy"]
+        ANO["3. Anonimización<br/>patrones + estructura del CV"]
         PLN["4. Preprocesamiento PLN<br/>detección de idioma (es/en)<br/>limpieza · lematización (spaCy)"]
         KB["5. Base de conocimiento<br/>sinónimos de habilidades es/en"]
         FEAT["6. Características<br/>TF-IDF coseno · cobertura · experiencia · educación"]
@@ -36,7 +36,7 @@ flowchart TD
     subgraph ST["Almacenamiento local"]
         DB[("SQLite<br/>vacantes · evaluaciones · retroalimentación")]
         MOD[("Modelo entrenado<br/>joblib + métricas")]
-        DS[("Conjuntos de datos<br/>Hugging Face, 8,000 pares (en)<br/>propio del equipo, 60 pares (es)")]
+        DS[("Conjuntos de datos<br/>Hugging Face, 8,000 pares (en)<br/>propio del equipo, 96 pares (es)")]
     end
 
     REC --> UI
@@ -136,7 +136,7 @@ Versiones verificadas al instalar el proyecto el 2 de octubre de 2026 con Python
 | Lenguaje | Python | 3.12 o superior | Ecosistema estándar de PLN y aprendizaje automático. |
 | Texto de PDF | pdfplumber | 0.11.10 | Extrae texto respetando el orden de las líneas; licencia MIT. |
 | Texto de DOCX | python-docx | 1.x | Lee párrafos y tablas de Word; licencia MIT. |
-| PLN | spaCy + `es_core_news_sm` y `en_core_web_sm` | 3.8.16 / 3.8.0 | Lematización en ambos idiomas y listas de palabras vacías. El reconocimiento de entidades apoya la anonimización; en español el modelo pequeño es poco confiable para nombres, por lo que no se usa como único mecanismo. |
+| PLN | spaCy + `es_core_news_sm` y `en_core_web_sm` | 3.8.16 / 3.8.0 | Lematización en ambos idiomas y listas de palabras vacías. Su reconocimiento de entidades no se usa: en la fase 2 confundió habilidades y empresas con personas. |
 | Modelos | scikit-learn | 1.9.1 | `TfidfVectorizer`, `MultinomialNB`, `LogisticRegression` y métricas en una sola librería. |
 | Datos | pandas, huggingface-hub | 3.0.6 | Descarga y manejo del conjunto de datos. |
 | Contratos | Pydantic | 2.13.5 | Validación y esquema JSON compartido entre backend y dashboard. |
@@ -149,10 +149,12 @@ Versiones verificadas al instalar el proyecto el 2 de octubre de 2026 con Python
 
 ```
 docs/                  requerimientos, arquitectura, decisiones
-data/                  scripts de descarga y preparación (fase 2); datos generados fuera de Git
-  samples/             CVs de prueba ficticios en PDF y DOCX
+data/                  descripción de los datos (README); datos descargados fuera de Git
+  samples/es/          conjunto propio en español: vacantes, CVs (Markdown, DOCX, PDF), etiquetas
+scripts/               build_samples.py: genera los DOCX y PDF de muestra
 src/cv_screening/
   schemas.py           contratos de datos (fase 2)
+  datasets.py          descarga y preparación del conjunto de entrenamiento (fase 2)
   ingestion.py         lectura de PDF y DOCX (fase 3)
   parsing.py           secciones del CV (fase 3)
   anonymization.py     eliminación de datos personales (fases 2 y 4)
@@ -178,3 +180,4 @@ tests/                 pruebas
 | D5 | Todo se ejecuta localmente con SQLite. | Privacidad de los CVs (RNF-01) y cero costo de infraestructura. | Base de datos o despliegue en la nube: fuera de alcance. |
 | D6 | Repositorio de código separado del repositorio del curso. | Lo comparte todo el equipo en GitHub. | Código dentro de la carpeta del curso. |
 | D7 | Los modelos usan solo características que no dependen del idioma, no las palabras del texto. | Permite entrenar con pares en inglés y evaluar pares en español con el mismo modelo. | Usar también los vectores TF-IDF como características: posiblemente más preciso en inglés, pero inútil en español. |
+| D8 | La anonimización usa patrones y la estructura del CV, sin reconocimiento de entidades. | Medido en la fase 2: el reconocimiento de entidades marcaba habilidades y empresas como personas, y borrarlas dañaría las características. | spaCy NER como apoyo (plan original de la fase 1). |

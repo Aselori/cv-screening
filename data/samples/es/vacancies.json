@@ -1,0 +1,42 @@
+[
+  {
+    "vacancy_id": "v-es-01",
+    "title": "Desarrollador(a) web full stack",
+    "description": "Empresa de software en Monterrey busca desarrollador(a) web full stack para construir y mantener aplicaciones internas. Responsabilidades: desarrollar interfaces con React, crear APIs REST con Node.js, diseñar consultas y modelos en bases de datos SQL, revisar código y trabajar con Git en equipo ágil. Requisitos: licenciatura en sistemas o afín, al menos 2 años de experiencia en desarrollo web, JavaScript, React, Node.js, SQL y Git. Deseable: TypeScript y Docker.",
+    "language": "es",
+    "required_skills": ["JavaScript", "React", "Node.js", "SQL", "Git"],
+    "preferred_skills": ["TypeScript", "Docker"],
+    "min_years_experience": 2,
+    "min_education_level": "bachelor"
+  },
+  {
+    "vacancy_id": "v-es-02",
+    "title": "Analista de datos",
+    "description": "Empresa de distribución busca analista de datos para el área comercial. Responsabilidades: extraer información con SQL, limpiar y analizar datos con Python, construir tableros en Power BI y preparar reportes en Excel para la dirección. Requisitos: licenciatura en actuaría, sistemas, ingeniería industrial o afín, al menos 1 año de experiencia, SQL, Excel, Power BI y Python. Deseable: conocimientos de estadística y Tableau.",
+    "language": "es",
+    "required_skills": ["SQL", "Excel", "Power BI", "Python"],
+    "preferred_skills": ["Estadística", "Tableau"],
+    "min_years_experience": 1,
+    "min_education_level": "bachelor"
+  },
+  {
+    "vacancy_id": "v-es-03",
+    "title": "Ejecutivo(a) de ventas B2B",
+    "description": "Distribuidora industrial busca ejecutivo(a) de ventas B2B. Responsabilidades: prospectar nuevos clientes empresariales, dar seguimiento a la cartera en el CRM, negociar precios y condiciones, y ofrecer atención al cliente postventa. Requisitos: licenciatura en administración, mercadotecnia o afín, al menos 2 años de experiencia en ventas, prospección, negociación, manejo de CRM y atención al cliente. Deseable: Salesforce e inglés intermedio.",
+    "language": "es",
+    "required_skills": ["Prospección", "Negociación", "CRM", "Atención al cliente"],
+    "preferred_skills": ["Salesforce", "Inglés"],
+    "min_years_experience": 2,
+    "min_education_level": "bachelor"
+  },
+  {
+    "vacancy_id": "v-es-04",
+    "title": "Auxiliar contable",
+    "description": "Despacho contable busca auxiliar contable. Responsabilidades: registrar pólizas, realizar conciliaciones bancarias, emitir y validar CFDI, y preparar reportes en Excel. Requisitos: carrera técnica o licenciatura en contabilidad, al menos 1 año de experiencia, contabilidad general, conciliaciones bancarias, CFDI y Excel. Deseable: CONTPAQi o SAP.",
+    "language": "es",
+    "required_skills": ["Contabilidad", "Conciliaciones bancarias", "CFDI", "Excel"],
+    "preferred_skills": ["CONTPAQi", "SAP"],
+    "min_years_experience": 1,
+    "min_education_level": "technical"
+  }
+]

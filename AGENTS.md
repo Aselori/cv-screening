@@ -33,6 +33,9 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
 - Instalación: `pip install -e ".[dev]"`, `python -m spacy download es_core_news_sm` y
   `python -m spacy download en_core_web_sm`.
 - Antes de cada commit: `ruff check .`, `ruff format --check .` y `pytest`.
+- Datos de entrenamiento: `python -m cv_screening.datasets download` y luego `prepare`.
+- CVs de muestra: editar `data/samples/es/cvs/*.md` y regenerar con
+  `python scripts/build_samples.py` (requiere LibreOffice). Detalle en `data/README.md`.
 
 ## Reglas
 
