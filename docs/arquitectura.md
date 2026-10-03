@@ -24,8 +24,8 @@ flowchart TD
     subgraph BE["Backend (Python + FastAPI)"]
         API["API REST"]
         ING["1. Ingesta<br/>PDF: pdfplumber · DOCX: python-docx"]
-        PAR["2. Parsing<br/>secciones a JSON (esquema CV)"]
-        ANO["3. Anonimización<br/>patrones + estructura del CV"]
+        ANO["2. Anonimización<br/>patrones + estructura del CV"]
+        PAR["3. Parsing<br/>secciones a JSON (esquema CV)"]
         PLN["4. Preprocesamiento PLN<br/>detección de idioma (es/en)<br/>limpieza · lematización (spaCy)"]
         KB["5. Base de conocimiento<br/>sinónimos de habilidades es/en"]
         FEAT["6. Características<br/>TF-IDF coseno · cobertura · experiencia · educación"]
@@ -41,7 +41,7 @@ flowchart TD
 
     REC --> UI
     UI <--> API
-    API --> ING --> PAR --> ANO --> PLN --> FEAT
+    API --> ING --> ANO --> PAR --> PLN --> FEAT
     KB --> FEAT
     FEAT --> ML --> SC --> API
     API <--> DB
@@ -69,8 +69,8 @@ sistema:
 | # | Módulo | Entrada | Salida | Fase |
 |---|---|---|---|---|
 | 1 | Ingesta | Archivo PDF o DOCX | Texto plano o error por archivo | 3 |
-| 2 | Parsing | Texto plano | `CV` en JSON con secciones | 3 |
-| 3 | Anonimización | `CV` | `CV` sin datos personales | 2, 4 |
+| 2 | Anonimización | Texto plano | Texto sin datos personales | 2, 3 |
+| 3 | Parsing | Texto anonimizado | `CV` en JSON con secciones | 3 |
 | 4 | Preprocesamiento PLN | Texto | Idioma detectado (es/en) y tokens lematizados sin palabras vacías | 4 |
 | 5 | Base de conocimiento | Habilidades en texto libre, en español o inglés | Habilidades normalizadas (mismo identificador en ambos idiomas) | 4, 6 |
 | 6 | Características | `CV` + `Vacancy` | Las cuatro características de requisitos.md, sección 5 | 5, 6 |
@@ -79,6 +79,15 @@ sistema:
 | 9 | API REST | Peticiones HTTP | JSON | 6 |
 | 10 | Dashboard | API REST | Interfaz web | 7 |
 | 11 | Almacenamiento | Vacantes, evaluaciones, decisiones | SQLite | 6, 8 |
+
+**Orden de los pasos 2 y 3.** La anonimización va antes del parsing: necesita las primeras
+líneas del documento para encontrar el nombre, y así el `CV` que se guarda ya no contiene datos
+personales.
+
+**Texto completo para las características.** En los CVs del conjunto de entrenamiento los
+encabezados vienen pegados al texto ("ExperienceAccountant") y el parser solo reconoce secciones
+en 1 de 642. Para que entrenamiento y uso real se comporten igual, las cuatro características se
+calculan sobre el texto completo; las secciones se usan para mostrar y explicar en el dashboard.
 
 ## 4. Contratos de datos
 
@@ -156,8 +165,9 @@ src/cv_screening/
   schemas.py           contratos de datos (fase 2)
   datasets.py          descarga y preparación del conjunto de entrenamiento (fase 2)
   ingestion.py         lectura de PDF y DOCX (fase 3)
+  anonymization.py     eliminación de datos personales (fases 2 y 3)
   parsing.py           secciones del CV (fase 3)
-  anonymization.py     eliminación de datos personales (fases 2 y 4)
+  pipeline.py          lectura, anonimización y parsing en un solo flujo, con CLI (fase 3)
   preprocessing.py     PLN (fase 4)
   knowledge/           base de conocimiento de habilidades (fases 4 y 6)
   features.py          características CV-vacante (fases 5 y 6)
