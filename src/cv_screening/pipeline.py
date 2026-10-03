@@ -1,0 +1,66 @@
+"""Flujo de procesamiento de CVs: lectura, anonimización y división en secciones.
+
+La anonimización va antes del parsing porque necesita el encabezado completo para encontrar
+el nombre, y así el `CV` resultante ya no contiene datos personales.
+
+Uso:
+    python -m cv_screening.pipeline data/samples/es/pdf --out salida/
+"""
+
+import argparse
+import json
+from pathlib import Path
+
+from cv_screening.anonymization import anonymize
+from cv_screening.ingestion import IngestionError, extract_text, ingest_batch
+from cv_screening.parsing import parse_cv
+from cv_screening.schemas import CV
+
+
+def process_document(data: bytes, file_name: str, *, anonymized: bool = True) -> CV:
+    """Convierte un PDF o DOCX en un `CV`. Lanza IngestionError si no se puede leer."""
+    text = extract_text(data, file_name).text
+    if anonymized:
+        text = anonymize(text).text
+    return parse_cv(text, file_name)
+
+
+def process_batch(
+    files: list[tuple[str, bytes]], *, anonymized: bool = True
+) -> tuple[list[CV], list[IngestionError]]:
+    documents, errors = ingest_batch(files)
+    cvs = [
+        parse_cv(anonymize(d.text).text if anonymized else d.text, d.file_name) for d in documents
+    ]
+    return cvs, errors
+
+
+def _collect(paths: list[Path]) -> list[Path]:
+    files = []
+    for path in paths:
+        files.extend(sorted(p for p in path.iterdir() if p.is_file()) if path.is_dir() else [path])
+    return files
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Procesa CVs en PDF o DOCX a JSON.")
+    parser.add_argument("paths", nargs="+", type=Path, help="archivos o carpetas")
+    parser.add_argument("--out", type=Path, required=True, help="carpeta de salida")
+    parser.add_argument("--no-anonymize", action="store_true", help="conservar datos personales")
+    args = parser.parse_args()
+
+    files = [(p.name, p.read_bytes()) for p in _collect(args.paths)]
+    cvs, errors = process_batch(files, anonymized=not args.no_anonymize)
+    args.out.mkdir(parents=True, exist_ok=True)
+    for cv in cvs:
+        out_file = args.out / f"{Path(cv.file_name).stem}.json"
+        out_file.write_text(cv.model_dump_json(indent=2), encoding="utf-8")
+    report = [{"file_name": e.file_name, "error": e.kind.value, "message": str(e)} for e in errors]
+    (args.out / "errors.json").write_text(
+        json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    print(f"{len(cvs)} CVs procesados, {len(errors)} con error. Salida en {args.out}")
+
+
+if __name__ == "__main__":
+    main()
