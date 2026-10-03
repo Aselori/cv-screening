@@ -54,7 +54,7 @@ def test_english_cv_removes_placeholder_contact_data():
 
 
 def test_years_are_not_phones():
-    text = "Periodo 2018-2021 y 2021 - 2024, folio 12345."
+    text = "Periodo 2018-2021 y 2021 - 2024, folio 12345. Scholarship 2011-20153.9 GPA"
     assert anonymize(text).text == text
 
 

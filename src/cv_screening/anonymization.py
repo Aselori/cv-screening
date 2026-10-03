@@ -23,7 +23,9 @@ EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 URL_RE = re.compile(
     r"(?:https?://|www\.)\S+|\b(?:linkedin\.com|github\.com|gitlab\.com)/\S+", re.IGNORECASE
 )
-# Candidatos a teléfono; se confirman contando dígitos para no confundirlos con años.
+# Candidatos a teléfono; se confirman contando dígitos y descartando rangos de años
+# ("2011-2015" pegado a otro número parece un teléfono de 10 dígitos).
+YEAR_RANGE_RE = re.compile(r"(?:19|20)\d{2}\s*[-–]\s*(?:19|20)\d{2}")
 PHONE_RE = re.compile(r"(?<![\w])(?:\+?\d{1,3}[\s.-]?)?(?:\(\d{2,3}\)|\d{2,3})(?:[\s.-]?\d){7,8}")
 POSTAL_CODE_RE = re.compile(
     # México: "C.P. 64000"
@@ -97,8 +99,9 @@ def _replace(pattern: re.Pattern, placeholder: str, text: str, counts: Counter, 
 
 def _replace_phones(text: str, counts: Counter) -> str:
     def repl(match: re.Match) -> str:
-        digits = sum(c.isdigit() for c in match.group(0))
-        if 10 <= digits <= 13:
+        candidate = match.group(0)
+        digits = sum(c.isdigit() for c in candidate)
+        if 10 <= digits <= 13 and not YEAR_RANGE_RE.match(candidate):
             counts["phone"] += 1
             return PHONE
         return match.group(0)
