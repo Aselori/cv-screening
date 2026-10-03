@@ -53,7 +53,8 @@ def main() -> None:
     cvs, errors = process_batch(files, anonymized=not args.no_anonymize)
     args.out.mkdir(parents=True, exist_ok=True)
     for cv in cvs:
-        out_file = args.out / f"{Path(cv.file_name).stem}.json"
+        # Nombre completo con extensión: cv.pdf y cv.docx no deben sobrescribirse entre sí.
+        out_file = args.out / f"{cv.file_name}.json"
         out_file.write_text(cv.model_dump_json(indent=2), encoding="utf-8")
     report = [{"file_name": e.file_name, "error": e.kind.value, "message": str(e)} for e in errors]
     (args.out / "errors.json").write_text(
