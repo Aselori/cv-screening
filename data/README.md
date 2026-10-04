@@ -114,3 +114,32 @@ las "personas" que detectaba eran habilidades o empresas ("Google Cloud", "Micro
 
 **Limitación conocida:** los nombres de otras personas dentro del texto (por ejemplo,
 referencias laborales como "Supervisor: Ken Cook") no se eliminan.
+
+## 4. Preprocesamiento (fase 4)
+
+```bash
+python -m cv_screening.datasets preprocess   # data/processed/cvs_nlp.csv y vacancies_nlp.csv
+```
+
+Lematiza cada CV y vacante distintos, y extrae habilidades (base de conocimiento de
+`src/cv_screening/knowledge/skills.json`), años de experiencia y nivel educativo. Tarda unos
+50 segundos. Cobertura sobre los 643 CVs y 351 vacantes del conjunto de entrenamiento:
+
+| Medición | Resultado |
+|---|---|
+| CVs con años de experiencia detectados | 80.9 % |
+| CVs con nivel educativo detectado | 85.8 % |
+| Habilidades por CV (mediana) | 9 |
+| Vacantes con 3 o más habilidades reconocidas | 76.6 % |
+| Habilidades por vacante (mediana) | 4 |
+| Vacantes con años mínimos detectados | 74.6 % |
+| Vacantes con nivel educativo mínimo detectado | 57.0 % |
+
+Limitaciones:
+
+- Los periodos que terminan en "Current" o "Actualidad" se cuentan hasta la fecha de hoy. Los
+  CVs del conjunto son de años anteriores, así que su experiencia queda sobreestimada (mediana
+  de 13.8 años).
+- La base de conocimiento tiene 81 habilidades de las áreas más comunes (software, datos,
+  contabilidad, finanzas y ventas); las habilidades de otras áreas no se reconocen.
+- La detección de idioma no distingue el portugués del español.
