@@ -1,10 +1,12 @@
+import json
 import re
+import sys
 from pathlib import Path
 
 import pytest
 
 from cv_screening.parsing import normalize_heading, parse_cv, section_of
-from cv_screening.pipeline import process_batch, process_document
+from cv_screening.pipeline import main, process_batch, process_document
 
 SAMPLES = Path(__file__).resolve().parents[1] / "data" / "samples" / "es"
 SOURCES = sorted((SAMPLES / "cvs").glob("cv-*.md"))
@@ -85,3 +87,20 @@ def test_batch_returns_cvs_and_errors():
     assert [cv.file_name for cv in cvs] == ["cv-05.docx"]
     assert "Licenciatura en Ingeniería en Sistemas" in cvs[0].sections.education
     assert [e.file_name for e in errors] == ["x.txt"]
+
+
+def test_cli_keeps_pdf_and_docx_with_the_same_name(tmp_path, monkeypatch):
+    inputs = tmp_path / "in"
+    inputs.mkdir()
+    for fmt in ("pdf", "docx"):
+        (inputs / f"cv-01.{fmt}").write_bytes((SAMPLES / fmt / f"cv-01.{fmt}").read_bytes())
+    (inputs / "roto.pdf").write_bytes(b"basura")
+    out = tmp_path / "out"
+    monkeypatch.setattr(sys, "argv", ["pipeline", str(inputs), "--out", str(out)])
+    main()
+    assert sorted(p.name for p in out.iterdir()) == [
+        "cv-01.docx.json",
+        "cv-01.pdf.json",
+        "errors.json",
+    ]
+    assert json.loads((out / "errors.json").read_text())[0]["error"] == "corrupt_file"
