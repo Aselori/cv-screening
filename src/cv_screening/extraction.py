@@ -36,13 +36,21 @@ EDUCATION_CONTEXT_RE = re.compile(
 
 EDUCATION_PATTERNS = [
     (EducationLevel.DOCTORATE, r"doctorado|ph\.?\s?d|doctor of"),
-    (EducationLevel.MASTER, r"maestria|master|mba|m\.?sc"),
-    (EducationLevel.BACHELOR, r"licenciatura|ingenieria en|bachelor|b\.?sc|undergraduate degree"),
-    (EducationLevel.TECHNICAL, r"tecnico en|tecnico superior|carrera tecnica|associate|conalep"),
+    # "Master" solo cuenta como grado ("master of", "master's"), no "master data" ni "mastered".
+    (EducationLevel.MASTER, r"maestria|masters? of|master'?s(?: degree)?|mba|m\.?sc|m\.s"),
+    (
+        EducationLevel.BACHELOR,
+        r"licenciatura|ingenieria en|bachelor'?s?|b\.?sc|b\.[sa]|bs degree|undergraduate",
+    ),
+    (
+        EducationLevel.TECHNICAL,
+        r"tecnico en|tecnico superior|carrera tecnica|associate'?s? degree|associate of|conalep",
+    ),
     (EducationLevel.HIGH_SCHOOL, r"preparatoria|bachillerato|high school|ged"),
 ]
-EDUCATION_RES = [(level, re.compile(rf"\b(?:{p})")) for level, p in EDUCATION_PATTERNS]
-IN_PROGRESS_RE = re.compile(r"en curso|trunca|cursando|in progress|currently pursuing|expected")
+EDUCATION_RES = [(level, re.compile(rf"\b(?:{p})(?![a-z])")) for level, p in EDUCATION_PATTERNS]
+# "Expected" no cuenta: la plantilla de los CVs de entrenamiento lo pone en todos los grados.
+IN_PROGRESS_RE = re.compile(r"en curso|trunca|cursando|in progress|currently pursuing")
 # Nivel completado más alto de alguien que todavía estudia (o dejó) cada nivel.
 COMPLETED_BEFORE = {
     EducationLevel.DOCTORATE: EducationLevel.MASTER,
@@ -118,7 +126,8 @@ def years_of_experience(text: str, today: date | None = None) -> float | None:
 
 
 def _education_mentions(text: str) -> list[tuple[EducationLevel, bool]]:
-    normalized = _normalize(text)
+    # Separa palabras pegadas por la plantilla de los CVs de entrenamiento ("totoBachelor").
+    normalized = _normalize(re.sub(r"(?<=[a-z])(?=[A-Z])", " ", text))
     mentions = []
     for level, pattern in EDUCATION_RES:
         for match in pattern.finditer(normalized):
