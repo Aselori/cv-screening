@@ -1,4 +1,4 @@
-"""Flujo de procesamiento de CVs: lectura, anonimización y división en secciones.
+"""Flujo de procesamiento de CVs: lectura, anonimización, secciones, idioma y entidades.
 
 La anonimización va antes del parsing porque necesita el encabezado completo para encontrar
 el nombre, y así el `CV` resultante ya no contiene datos personales.
@@ -12,26 +12,51 @@ import json
 from pathlib import Path
 
 from cv_screening.anonymization import anonymize
-from cv_screening.ingestion import IngestionError, extract_text, ingest_batch
+from cv_screening.extraction import education_level, years_of_experience
+from cv_screening.ingestion import (
+    IngestedDocument,
+    IngestionError,
+    IngestionErrorKind,
+    extract_text,
+    ingest_batch,
+)
+from cv_screening.knowledge import extract_skills
+from cv_screening.language import detect_language
 from cv_screening.parsing import parse_cv
-from cv_screening.schemas import CV
+from cv_screening.schemas import CV, CVProfile
+
+
+def _to_cv(document: IngestedDocument, anonymized: bool) -> CV:
+    language = detect_language(document.text)
+    if language is None:
+        raise IngestionError(IngestionErrorKind.UNSUPPORTED_LANGUAGE, document.file_name)
+    text = anonymize(document.text).text if anonymized else document.text
+    cv = parse_cv(text, document.file_name)
+    cv.language = language
+    # Las entidades se extraen del texto completo, igual que en los datos de entrenamiento.
+    cv.profile = CVProfile(
+        skills=sorted(extract_skills(text)),
+        years_experience=years_of_experience(text),
+        education_level=education_level(text),
+    )
+    return cv
 
 
 def process_document(data: bytes, file_name: str, *, anonymized: bool = True) -> CV:
-    """Convierte un PDF o DOCX en un `CV`. Lanza IngestionError si no se puede leer."""
-    text = extract_text(data, file_name).text
-    if anonymized:
-        text = anonymize(text).text
-    return parse_cv(text, file_name)
+    """Convierte un PDF o DOCX en un `CV`. Lanza IngestionError si no se puede procesar."""
+    return _to_cv(extract_text(data, file_name), anonymized)
 
 
 def process_batch(
     files: list[tuple[str, bytes]], *, anonymized: bool = True
 ) -> tuple[list[CV], list[IngestionError]]:
     documents, errors = ingest_batch(files)
-    cvs = [
-        parse_cv(anonymize(d.text).text if anonymized else d.text, d.file_name) for d in documents
-    ]
+    cvs = []
+    for document in documents:
+        try:
+            cvs.append(_to_cv(document, anonymized))
+        except IngestionError as error:
+            errors.append(error)
     return cvs, errors
 
 

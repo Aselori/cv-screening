@@ -30,6 +30,7 @@ class IngestionErrorKind(StrEnum):
     TOO_LARGE = "too_large"
     CORRUPT_FILE = "corrupt_file"
     NO_TEXT = "no_text"
+    UNSUPPORTED_LANGUAGE = "unsupported_language"
 
 
 ERROR_MESSAGES = {
@@ -37,6 +38,7 @@ ERROR_MESSAGES = {
     IngestionErrorKind.TOO_LARGE: "El archivo supera el tamaño máximo de 5 MB.",
     IngestionErrorKind.CORRUPT_FILE: "El archivo está dañado o no se puede abrir.",
     IngestionErrorKind.NO_TEXT: "El PDF no tiene texto extraíble (posiblemente es escaneado).",
+    IngestionErrorKind.UNSUPPORTED_LANGUAGE: "No se reconoce el idioma: solo español o inglés.",
 }
 
 
