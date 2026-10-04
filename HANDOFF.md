@@ -31,7 +31,7 @@ Aldo no tiene interés en llevar el proyecto más allá de lo que pide el curso.
 
 - `language.py`: idioma por palabras vacías exclusivas; 950 de 950 textos correctos.
 - `preprocessing.py`: limpieza y lematización con spaCy (conserva la ñ).
-- `knowledge/skills.json` + `knowledge/__init__.py`: 81 habilidades, 293 alias, reglas
+- `knowledge/skills.json` + `knowledge/__init__.py`: 81 habilidades, 299 alias, reglas
   `implies` (MySQL implica SQL, HubSpot implica CRM).
 - `extraction.py`: años de experiencia (mención explícita o suma de periodos sin traslapes ni
   estudios), nivel educativo (en curso cuenta como el nivel anterior), requisitos de vacantes.
