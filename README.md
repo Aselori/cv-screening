@@ -21,6 +21,7 @@ Logística, y aprende de la retroalimentación de los reclutadores.
 - [Requerimientos](docs/requisitos.md): requerimientos funcionales y no funcionales, criterios
   de evaluación de perfiles y alcance.
 - [Arquitectura](docs/arquitectura.md): diagrama, módulos, flujo de datos y librerías elegidas.
+- [Resultados](docs/resultados.md): métricas de los modelos y su interpretación.
 
 ## Instalación
 

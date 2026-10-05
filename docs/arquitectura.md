@@ -73,8 +73,8 @@ sistema:
 | 3 | Parsing | Texto anonimizado | `CV` en JSON con secciones | 3 |
 | 4 | Preprocesamiento PLN | Texto | Idioma detectado (es/en) y tokens lematizados sin palabras vacías | 4 |
 | 5 | Base de conocimiento | Habilidades en texto libre, en español o inglés | Habilidades normalizadas (mismo identificador en ambos idiomas) | 4, 6 |
-| 6 | Características | `CV` + `Vacancy` | Las cuatro características de requisitos.md, sección 5 | 5, 6 |
-| 7 | Modelos | Las cuatro características | Probabilidad por clase | 5 |
+| 6 | Características | `Vacancy` + sus candidatos | Las siete características de requisitos.md, sección 5 | 5 |
+| 7 | Modelos | Las siete características | Probabilidad por clase | 5 |
 | 8 | Puntaje y explicación | Probabilidades + características | `Evaluation` | 6 |
 | 9 | API REST | Peticiones HTTP | JSON | 6 |
 | 10 | Dashboard | API REST | Interfaz web | 7 |
@@ -86,7 +86,7 @@ personales.
 
 **Texto completo para las características.** En los CVs del conjunto de entrenamiento los
 encabezados vienen pegados al texto ("ExperienceAccountant") y el parser solo reconoce secciones
-en 1 de 642. Para que entrenamiento y uso real se comporten igual, las cuatro características se
+en 1 de 642. Para que entrenamiento y uso real se comporten igual, las características se
 calculan sobre el texto completo; las secciones se usan para mostrar y explicar en el dashboard.
 
 ## 4. Contratos de datos
@@ -172,8 +172,8 @@ src/cv_screening/
   preprocessing.py     limpieza y lematización (fase 4)
   knowledge/           base de conocimiento de habilidades: skills.json y buscador (fase 4)
   extraction.py        años de experiencia, nivel educativo y requisitos de vacantes (fase 4)
-  features.py          características CV-vacante (fases 5 y 6)
-  models.py            entrenamiento, evaluación y predicción (fase 5)
+  features.py          características CV-vacante, calculadas por vacante (fase 5)
+  models.py            entrenamiento, evaluación y puntaje (fase 5)
   storage.py           SQLite (fases 6 y 8)
   api.py               FastAPI (fase 6)
 frontend/              dashboard React (fase 7)
@@ -193,3 +193,4 @@ tests/                 pruebas
 | D6 | Repositorio de código separado del repositorio del curso. | Lo comparte todo el equipo en GitHub. | Código dentro de la carpeta del curso. |
 | D7 | Los modelos usan solo características que no dependen del idioma, no las palabras del texto. | Permite entrenar con pares en inglés y evaluar pares en español con el mismo modelo. | Usar también los vectores TF-IDF como características: posiblemente más preciso en inglés, pero inútil en español. |
 | D8 | La anonimización usa patrones y la estructura del CV, sin reconocimiento de entidades. | Medido en la fase 2: el reconocimiento de entidades marcaba habilidades y empresas como personas, y borrarlas dañaría las características. | spaCy NER como apoyo (plan original de la fase 1). |
+| D9 | El TF-IDF de `text_similarity` se ajusta por vacante con sus candidatos, y se agregan tres características relativas a esos candidatos. | Mismo comportamiento en entrenamiento, en español y en uso real, sin corpus por idioma; medido en la fase 5: F1 macro similar al TF-IDF global (0.384 frente a 0.388) y +0.03 con las características relativas. | TF-IDF ajustado con todo el corpus de entrenamiento: necesitaría otro corpus para español. |
