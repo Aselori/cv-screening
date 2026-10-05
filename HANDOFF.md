@@ -4,11 +4,12 @@ Punto de recuperación del trabajo. Actualizado: 2026-10-02.
 
 ## Objetivo
 
-Avanzar el proyecto fase por fase con revisión de Aldo entre fases, **con alcance mínimo**:
-Aldo no tiene interés en llevar el proyecto más allá de lo que pide el curso.
+Avanzar el proyecto fase por fase con revisión de Aldo entre fases. **Alcance: lo que pide el
+curso, sin crecer más.** No se trata de recortar lo planeado, sino de no agregar funciones ni
+pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar la materia.
 
 - Fases 1 a 3 (requerimientos, datos, carga y parsing): **aprobadas, en `main`**.
-- Fase 4 (preprocesamiento PLN): **terminada en `phase-4-preprocessing`, pendiente de revisión**.
+- Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
 
 ## Decisiones de Aldo
 
@@ -19,13 +20,12 @@ Aldo no tiene interés en llevar el proyecto más allá de lo que pide el curso.
 - No descargar `es_core_news_md`; se usa `es_core_news_sm` (su NER no se usa, D8).
 - Los roles de la actividad 1.3 son nominales; no se asignan responsables por módulo.
 - Aldo no entrega los reportes del curso; el equipo ya entregó al menos la fase 1.
-- Fase 4 aprobada (2026-10-04) con alcance reducido: base de conocimiento de unas 80
-  habilidades y reportar la cobertura en lugar de perseguir una meta.
+- Fase 4 aprobada (2026-10-04): base de conocimiento de unas 80 habilidades y reportar la
+  cobertura en lugar de perseguir una meta.
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 3 y la corrección de nombres de salida.
-- `phase-4-preprocessing` (local, sin subir).
+- `main` (en GitHub): fases 1 a 4 y la corrección de nombres de salida.
 
 ## Fase 4: hecho
 
@@ -56,7 +56,6 @@ Aldo no tiene interés en llevar el proyecto más allá de lo que pide el curso.
 
 ## Pendiente de Aldo
 
-- Revisar la fase 4 y autorizar push y merge de `phase-4-preprocessing`.
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
