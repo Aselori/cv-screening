@@ -1,0 +1,394 @@
+{
+  "labels_order": [
+    "No Fit",
+    "Potential Fit",
+    "Good Fit"
+  ],
+  "features": [
+    "text_similarity",
+    "skill_coverage",
+    "experience_fit",
+    "education_fit",
+    "similarity_rank",
+    "coverage_rank",
+    "matched_skills"
+  ],
+  "models": {
+    "logistic_regression": {
+      "english_test": {
+        "macro_f1": 0.415,
+        "accuracy": 0.444,
+        "f1_by_class": {
+          "No Fit": 0.542,
+          "Potential Fit": 0.356,
+          "Good Fit": 0.346
+        },
+        "confusion_matrix": [
+          [
+            463,
+            280,
+            114
+          ],
+          [
+            180,
+            181,
+            83
+          ],
+          [
+            210,
+            111,
+            137
+          ]
+        ]
+      },
+      "english_grouped_cv": {
+        "macro_f1": 0.428,
+        "accuracy": 0.469,
+        "f1_by_class": {
+          "No Fit": 0.601,
+          "Potential Fit": 0.339,
+          "Good Fit": 0.344
+        },
+        "confusion_matrix": [
+          [
+            1847,
+            717,
+            572
+          ],
+          [
+            578,
+            550,
+            426
+          ],
+          [
+            584,
+            427,
+            527
+          ]
+        ]
+      },
+      "spanish_all": {
+        "macro_f1": 0.652,
+        "accuracy": 0.865,
+        "f1_by_class": {
+          "No Fit": 0.967,
+          "Potential Fit": 0.435,
+          "Good Fit": 0.556
+        },
+        "confusion_matrix": [
+          [
+            73,
+            4,
+            0
+          ],
+          [
+            1,
+            5,
+            5
+          ],
+          [
+            0,
+            3,
+            5
+          ]
+        ]
+      },
+      "spanish_same_domain": {
+        "macro_f1": 0.674,
+        "accuracy": 0.667,
+        "f1_by_class": {
+          "No Fit": 0.933,
+          "Potential Fit": 0.5,
+          "Good Fit": 0.588
+        },
+        "confusion_matrix": [
+          [
+            7,
+            1,
+            0
+          ],
+          [
+            0,
+            4,
+            4
+          ],
+          [
+            0,
+            3,
+            5
+          ]
+        ]
+      }
+    },
+    "naive_bayes": {
+      "english_test": {
+        "macro_f1": 0.374,
+        "accuracy": 0.459,
+        "f1_by_class": {
+          "No Fit": 0.6,
+          "Potential Fit": 0.286,
+          "Good Fit": 0.237
+        },
+        "confusion_matrix": [
+          [
+            613,
+            179,
+            65
+          ],
+          [
+            275,
+            118,
+            51
+          ],
+          [
+            297,
+            84,
+            77
+          ]
+        ]
+      },
+      "english_grouped_cv": {
+        "macro_f1": 0.414,
+        "accuracy": 0.505,
+        "f1_by_class": {
+          "No Fit": 0.653,
+          "Potential Fit": 0.309,
+          "Good Fit": 0.279
+        },
+        "confusion_matrix": [
+          [
+            2382,
+            461,
+            293
+          ],
+          [
+            888,
+            426,
+            240
+          ],
+          [
+            886,
+            316,
+            336
+          ]
+        ]
+      },
+      "spanish_all": {
+        "macro_f1": 0.569,
+        "accuracy": 0.875,
+        "f1_by_class": {
+          "No Fit": 0.981,
+          "Potential Fit": 0.56,
+          "Good Fit": 0.167
+        },
+        "confusion_matrix": [
+          [
+            76,
+            0,
+            1
+          ],
+          [
+            2,
+            7,
+            2
+          ],
+          [
+            0,
+            7,
+            1
+          ]
+        ]
+      },
+      "spanish_same_domain": {
+        "macro_f1": 0.514,
+        "accuracy": 0.542,
+        "f1_by_class": {
+          "No Fit": 0.875,
+          "Potential Fit": 0.5,
+          "Good Fit": 0.167
+        },
+        "confusion_matrix": [
+          [
+            7,
+            0,
+            1
+          ],
+          [
+            1,
+            5,
+            2
+          ],
+          [
+            0,
+            7,
+            1
+          ]
+        ]
+      }
+    },
+    "baseline_similarity": {
+      "english_test": {
+        "macro_f1": 0.322,
+        "accuracy": 0.407,
+        "f1_by_class": {
+          "No Fit": 0.556,
+          "Potential Fit": 0.09,
+          "Good Fit": 0.322
+        },
+        "confusion_matrix": [
+          [
+            509,
+            51,
+            297
+          ],
+          [
+            224,
+            25,
+            195
+          ],
+          [
+            242,
+            34,
+            182
+          ]
+        ]
+      },
+      "english_grouped_cv": {
+        "macro_f1": 0.346,
+        "accuracy": 0.44,
+        "f1_by_class": {
+          "No Fit": 0.587,
+          "Potential Fit": 0.077,
+          "Good Fit": 0.375
+        },
+        "confusion_matrix": [
+          [
+            1909,
+            189,
+            1038
+          ],
+          [
+            780,
+            74,
+            700
+          ],
+          [
+            678,
+            104,
+            756
+          ]
+        ]
+      },
+      "spanish_all": {
+        "macro_f1": 0.568,
+        "accuracy": 0.865,
+        "f1_by_class": {
+          "No Fit": 0.98,
+          "Potential Fit": 0.154,
+          "Good Fit": 0.571
+        },
+        "confusion_matrix": [
+          [
+            74,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            10
+          ],
+          [
+            0,
+            0,
+            8
+          ]
+        ]
+      },
+      "spanish_same_domain": {
+        "macro_f1": 0.573,
+        "accuracy": 0.625,
+        "f1_by_class": {
+          "No Fit": 0.857,
+          "Potential Fit": 0.222,
+          "Good Fit": 0.64
+        },
+        "confusion_matrix": [
+          [
+            6,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            7
+          ],
+          [
+            0,
+            0,
+            8
+          ]
+        ]
+      }
+    },
+    "always_no_fit": {
+      "english_test": {
+        "macro_f1": 0.218,
+        "accuracy": 0.487,
+        "f1_by_class": {
+          "No Fit": 0.655,
+          "Potential Fit": 0.0,
+          "Good Fit": 0.0
+        },
+        "confusion_matrix": [
+          [
+            857,
+            0,
+            0
+          ],
+          [
+            444,
+            0,
+            0
+          ],
+          [
+            458,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "logistic_regression_coefficients": {
+    "Good Fit": {
+      "text_similarity": 0.052,
+      "skill_coverage": -0.064,
+      "experience_fit": -0.031,
+      "education_fit": -0.015,
+      "similarity_rank": 0.032,
+      "coverage_rank": -0.066,
+      "matched_skills": 0.273
+    },
+    "No Fit": {
+      "text_similarity": -0.054,
+      "skill_coverage": -0.144,
+      "experience_fit": -0.069,
+      "education_fit": -0.025,
+      "similarity_rank": -0.121,
+      "coverage_rank": 0.047,
+      "matched_skills": -0.185
+    },
+    "Potential Fit": {
+      "text_similarity": 0.002,
+      "skill_coverage": 0.208,
+      "experience_fit": 0.1,
+      "education_fit": 0.04,
+      "similarity_rank": 0.088,
+      "coverage_rank": 0.019,
+      "matched_skills": -0.087
+    }
+  },
+  "trained_at": "2026-10-05T16:38:35"
+}
