@@ -40,14 +40,23 @@ class CVSections(BaseModel):
     other: str = ""
 
 
+class CVProfile(BaseModel):
+    """Entidades extraídas de un CV (fase 4)."""
+
+    skills: list[str] = Field(default_factory=list)
+    years_experience: float | None = Field(default=None, ge=0)
+    education_level: EducationLevel | None = None
+
+
 class CV(BaseModel):
-    """Salida del parsing de un currículum."""
+    """Salida del procesamiento de un currículum."""
 
     candidate_id: str
     file_name: str | None = None
     language: Language | None = None
     raw_text: str
     sections: CVSections = Field(default_factory=CVSections)
+    profile: CVProfile | None = None
 
 
 class Vacancy(BaseModel):
