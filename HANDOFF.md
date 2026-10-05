@@ -10,7 +10,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 - Fases 1 a 3 (requerimientos, datos, carga y parsing): **aprobadas, en `main`**.
 - Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
-- Fase 5 (características y modelos): **terminada en `phase-5-models`, pendiente de revisión**.
+- Fase 5 (características y modelos): **aprobada, en `main`**.
 
 ## Decisiones de Aldo
 
@@ -28,8 +28,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 4.
-- `phase-5-models` (local, sin subir).
+- `main` (en GitHub): fases 1 a 5.
 
 ## Fase 5: hecho
 
@@ -57,7 +56,6 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Pendiente de Aldo
 
-- Revisar la fase 5 y autorizar push y merge de `phase-5-models`.
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
