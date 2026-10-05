@@ -22,7 +22,7 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
   funciones, archivos, campos JSON, ramas) están en inglés.
 - Clasificación de pares CV-vacante en `Good Fit`, `Potential Fit` y `No Fit`, con el conjunto
   de datos `cnamuangtoun/resume-job-description-fit` de Hugging Face.
-- Los modelos usan solo las cuatro características que no dependen del idioma (D7):
+- Los modelos usan solo características que no dependen del idioma (D7, D9):
   Regresión Logística como principal, Naive Bayes como comparación y similitud coseno como
   línea base. Se entrenan en inglés y se miden también con un conjunto propio en español.
 - Backend Python + FastAPI, dashboard React + Vite + TypeScript, SQLite local.
@@ -34,7 +34,8 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
   `python -m spacy download en_core_web_sm`.
 - Antes de cada commit: `ruff check .`, `ruff format --check .` y `pytest`.
 - Datos de entrenamiento: `python -m cv_screening.datasets download`, luego `prepare` y
-  `preprocess`.
+  `preprocess`. Modelos: `python -m cv_screening.models train` (resultados en
+  `docs/resultados.md`).
 - CVs de muestra: editar `data/samples/es/cvs/*.md` y regenerar con
   `python scripts/build_samples.py` (requiere LibreOffice). Detalle en `data/README.md`.
 

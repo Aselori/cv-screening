@@ -10,6 +10,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 - Fases 1 a 3 (requerimientos, datos, carga y parsing): **aprobadas, en `main`**.
 - Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
+- Fase 5 (características y modelos): **aprobada, en `main`**.
 
 ## Decisiones de Aldo
 
@@ -22,36 +23,35 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Aldo no entrega los reportes del curso; el equipo ya entregó al menos la fase 1.
 - Fase 4 aprobada (2026-10-04): base de conocimiento de unas 80 habilidades y reportar la
   cobertura en lugar de perseguir una meta.
+- Fase 5 aprobada (2026-10-05) con las 3 características relativas; sin ajustar métricas más
+  allá de superar las líneas base.
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 4 y la corrección de nombres de salida.
+- `main` (en GitHub): fases 1 a 5.
 
-## Fase 4: hecho
+## Fase 5: hecho
 
-- `language.py`: idioma por palabras vacías exclusivas; 950 de 950 textos correctos.
-- `preprocessing.py`: limpieza y lematización con spaCy (conserva la ñ).
-- `knowledge/skills.json` + `knowledge/__init__.py`: 81 habilidades, 299 alias, reglas
-  `implies` (MySQL implica SQL, HubSpot implica CRM).
-- `extraction.py`: años de experiencia (mención explícita o suma de periodos sin traslapes ni
-  estudios), nivel educativo (en curso cuenta como el nivel anterior), requisitos de vacantes.
-- `pipeline.py`: agrega idioma y `CVProfile`; rechaza otros idiomas (`unsupported_language`).
-- `datasets.py preprocess`: `data/processed/cvs_nlp.csv` y `vacancies_nlp.csv` (unos 50 s).
-- Docs: `data/README.md` sección 4 con cobertura y limitaciones; estructura en arquitectura.
+- `features.py`: 7 características por vacante (4 documentadas + percentil de similitud,
+  percentil de cobertura y habilidades coincidentes). TF-IDF ajustado por vacante (D9).
+- `models.py`: Regresión Logística (principal), Naive Bayes gaussiano y línea base de
+  similitud; evaluación en prueba en inglés, validación agrupada por CV y conjunto en español;
+  guarda `models/model.joblib` (fuera de Git) y `models/metrics.json`.
+- `docs/resultados.md`: tablas, matrices de confusión, interpretación y limitaciones.
+- Docs: requisitos (7 características), arquitectura (D9, módulos), README, AGENTS.
 
 ## Verificado
 
-- 175 pruebas pasan, `ruff` limpio.
-- Extracción en los 24 CVs de muestra igual a los valores escritos a mano (años con
-  tolerancia de 1); requisitos de las 4 vacantes iguales a sus campos estructurados.
-- Cobertura en entrenamiento: años 80.9 %, educación 85.8 %, vacantes con 3 o más
-  habilidades 76.6 %.
+- 181 pruebas pasan, `ruff` limpio. `models train` tarda unos 8 s.
+- F1 macro de la Regresión Logística: prueba en inglés 0.415, agrupada por CV 0.428, español
+  0.652 (96 pares) y 0.674 (24 del mismo dominio). Supera a Naive Bayes (0.374) y a la línea
+  base de similitud (0.322) en todos los conjuntos.
 
 ## No verificado
 
 - Instalación en Windows y en Python 3.12 o 3.13.
 - CVs reales de formatos complejos.
-- Etiquetas del conjunto propio: borrador sin revisar por el equipo.
+- Etiquetas del conjunto propio: borrador sin revisar; el resultado en español es optimista.
 - Años de experiencia del conjunto de entrenamiento: sobreestimados por "Current".
 
 ## Pendiente de Aldo
@@ -60,7 +60,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Siguientes pasos
 
-1. Fase 5 (cronograma: 12 al 16 de octubre): características (TF-IDF coseno, cobertura de
-   habilidades, experiencia y educación), Naive Bayes y Regresión Logística, métricas en el
-   conjunto de prueba en inglés y en el conjunto propio en español, partición agrupada por CV.
-   Planearla y pedir aprobación antes de implementar.
+1. Fase 6 (cronograma: 19 al 23 de octubre): motor de puntuación integrado. Función que recibe
+   una vacante y sus CVs y devuelve `Evaluation` (puntaje, clase, probabilidades, habilidades
+   encontradas y faltantes) ordenados; API REST con FastAPI (vacantes, carga de CVs, ranking)
+   y SQLite. Planearla y pedir aprobación antes de implementar.

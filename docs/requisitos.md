@@ -68,7 +68,8 @@ Usuario principal: reclutador de Recursos Humanos.
 
 ## 5. Criterios de evaluación de perfiles
 
-Cada CV se evalúa contra una vacante con cuatro características. Todas se calculan después de
+Cada CV se evalúa contra una vacante con siete características: cuatro absolutas y tres
+relativas a los demás candidatos de la misma vacante. Todas se calculan después de
 anonimizar el CV y **no dependen del idioma**: cada una compara el CV con su propia vacante, y
 el resultado es un número que significa lo mismo en español o en inglés. Por eso un modelo
 entrenado con pares en inglés puede evaluar pares en español.
@@ -79,13 +80,16 @@ entrenado con pares en inglés puede evaluar pares en español.
 | `skill_coverage` | Habilidades de la vacante presentes en el CV, normalizadas con la base de conocimiento. Las deseables pesan la mitad: (requeridas encontradas + 0.5 × deseables encontradas) / (requeridas + 0.5 × deseables). Si la vacante no lista habilidades, vale 1. | 0 a 1 |
 | `experience_fit` | Años de experiencia detectados en el CV ("5 años", "5 years" o periodos como "2021-2024") entre los años mínimos requeridos, con tope en 1. Si la vacante no indica años, vale 1. | 0 a 1 |
 | `education_fit` | 1 si el nivel educativo detectado alcanza el mínimo requerido o si la vacante no pide uno, 0.5 si es un nivel inferior, 0 si no se detecta. Niveles: bachillerato, técnico, licenciatura, maestría, doctorado, con sus equivalentes en inglés (high school, associate, bachelor, master, PhD). | 0, 0.5 o 1 |
+| `similarity_rank` | Percentil de `text_similarity` entre los candidatos de la misma vacante (agregada en la fase 5). | 0 a 1 |
+| `coverage_rank` | Percentil de `skill_coverage` entre los candidatos de la misma vacante (fase 5). | 0 a 1 |
+| `matched_skills` | Número de habilidades requeridas encontradas, con tope en 10, dividido entre 10 (fase 5). | 0 a 1 |
 
 **Clases.** Cada par CV-vacante pertenece a una de tres clases: `Good Fit`, `Potential Fit` o
 `No Fit` (las etiquetas del conjunto de datos). En la interfaz se muestran como Apto, Posible y
 No apto.
 
 **Puntaje de idoneidad.** El modelo de Regresión Logística estima la probabilidad de cada clase
-a partir de las cuatro características anteriores. No usa las palabras del texto como
+a partir de las siete características anteriores. No usa las palabras del texto como
 características directas, porque esas sí dependen del idioma. El puntaje es:
 
 ```
