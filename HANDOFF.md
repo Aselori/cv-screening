@@ -11,6 +11,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fases 1 a 3 (requerimientos, datos, carga y parsing): **aprobadas, en `main`**.
 - Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
 - Fase 5 (características y modelos): **aprobada, en `main`**.
+- Fase 6 (motor de puntuación y API): **terminada en `phase-6-scoring`, pendiente de revisión**.
 
 ## Decisiones de Aldo
 
@@ -25,42 +26,48 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
   cobertura en lugar de perseguir una meta.
 - Fase 5 aprobada (2026-10-05) con las 3 características relativas; sin ajustar métricas más
   allá de superar las líneas base.
+- Fase 6 aprobada (2026-10-07), incluida la base SQLite en `data/app.db` y `httpx` en dev.
 
 ## Ramas
 
 - `main` (en GitHub): fases 1 a 5.
+- `phase-6-scoring` (local, sin subir).
 
-## Fase 5: hecho
+## Fase 6: hecho
 
-- `features.py`: 7 características por vacante (4 documentadas + percentil de similitud,
-  percentil de cobertura y habilidades coincidentes). TF-IDF ajustado por vacante (D9).
-- `models.py`: Regresión Logística (principal), Naive Bayes gaussiano y línea base de
-  similitud; evaluación en prueba en inglés, validación agrupada por CV y conjunto en español;
-  guarda `models/model.joblib` (fuera de Git) y `models/metrics.json`.
-- `docs/resultados.md`: tablas, matrices de confusión, interpretación y limitaciones.
-- Docs: requisitos (7 características), arquitectura (D9, módulos), README, AGENTS.
+- `scoring.py`: `evaluate_candidates(vacancy, cvs)` devuelve `Evaluation` ordenadas, con
+  habilidades encontradas y faltantes; completa la vacante con lo extraído de su descripción.
+- `storage.py`: SQLite (`data/app.db`, fuera de Git) con tablas `vacancies` y `candidates`.
+- `api.py`: vacantes, carga de CVs (re-evalúa a todos los candidatos), ranking con filtros,
+  decisión del reclutador y métricas. Inicio: `uvicorn cv_screening.api:app --reload`.
+- `Features` admite las 3 características relativas; `httpx` en dependencias de desarrollo.
+- Docs: sección API de la arquitectura (rutas reales, re-evaluación, orden contra clase),
+  ejemplo JSON con nombres de habilidades, README con el arranque de la API.
 
 ## Verificado
 
-- 181 pruebas pasan, `ruff` limpio. `models train` tarda unos 8 s.
-- F1 macro de la Regresión Logística: prueba en inglés 0.415, agrupada por CV 0.428, español
-  0.652 (96 pares) y 0.674 (24 del mismo dominio). Supera a Naive Bayes (0.374) y a la línea
-  base de similitud (0.322) en todos los conjuntos.
+- 189 pruebas pasan, `ruff` limpio.
+- En las 4 vacantes de muestra, los 2 CVs etiquetados `Good Fit` quedan en los 2 primeros
+  lugares (prueba `test_good_fit_candidates_rank_first`).
+- Servidor real con uvicorn y curl: vacante creada, 7 CVs (PDF y DOCX) evaluados, un `.txt`
+  rechazado sin detener el lote, filtros por habilidad y puntaje correctos.
 
 ## No verificado
 
 - Instalación en Windows y en Python 3.12 o 3.13.
-- CVs reales de formatos complejos.
+- CVs reales de formatos complejos; vacante y CVs en idiomas distintos (similitud casi 0).
 - Etiquetas del conjunto propio: borrador sin revisar; el resultado en español es optimista.
-- Años de experiencia del conjunto de entrenamiento: sobreestimados por "Current".
+- Carga concurrente de varios lotes a la misma vacante (no se probó).
 
 ## Pendiente de Aldo
 
+- Revisar la fase 6 y autorizar push y merge de `phase-6-scoring`.
+- Decidir React + Vite o Next.js para el dashboard (fase 7).
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
 
-1. Fase 6 (cronograma: 19 al 23 de octubre): motor de puntuación integrado. Función que recibe
-   una vacante y sus CVs y devuelve `Evaluation` (puntaje, clase, probabilidades, habilidades
-   encontradas y faltantes) ordenados; API REST con FastAPI (vacantes, carga de CVs, ranking)
-   y SQLite. Planearla y pedir aprobación antes de implementar.
+1. Fase 7 (cronograma: 26 al 30 de octubre): dashboard de ranking (vacantes, carga de CVs,
+   ranking con filtros, explicación del puntaje, decisión del reclutador, métricas), en
+   `frontend/`, servido por FastAPI. Requiere crear `package.json`: pedir permiso. Planearla y
+   pedir aprobación antes de implementar; verificar con Playwright.
