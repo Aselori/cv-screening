@@ -11,7 +11,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fases 1 a 3 (requerimientos, datos, carga y parsing): **aprobadas, en `main`**.
 - Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
 - Fase 5 (características y modelos): **aprobada, en `main`**.
-- Fase 6 (motor de puntuación y API): **terminada en `phase-6-scoring`, pendiente de revisión**.
+- Fase 6 (motor de puntuación y API): **aprobada, en `main`**.
 
 ## Decisiones de Aldo
 
@@ -27,11 +27,12 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fase 5 aprobada (2026-10-05) con las 3 características relativas; sin ajustar métricas más
   allá de superar las líneas base.
 - Fase 6 aprobada (2026-10-07), incluida la base SQLite en `data/app.db` y `httpx` en dev.
+- Dashboard (fase 7): Aldo deja la elección a Claude; se usa React + Vite + TypeScript con
+  pnpm (su gestor de paquetes por defecto), servido por FastAPI como un solo proceso.
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 5.
-- `phase-6-scoring` (local, sin subir).
+- `main` (en GitHub): fases 1 a 6.
 
 ## Fase 6: hecho
 
@@ -61,8 +62,6 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Pendiente de Aldo
 
-- Revisar la fase 6 y autorizar push y merge de `phase-6-scoring`.
-- Decidir React + Vite o Next.js para el dashboard (fase 7).
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
