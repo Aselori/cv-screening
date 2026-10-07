@@ -1,0 +1,510 @@
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --text: #1d1c1a;
+  --muted: #6b6862;
+  --line: #e2dfd8;
+  --accent: #2f5d8a;
+  --track: #e8e6e0;
+  --good: #1f7a4d;
+  --good-bg: #e3f2ea;
+  --potential: #8a5a00;
+  --potential-bg: #fbefd6;
+  --no: #5f5c56;
+  --no-bg: #ecebe7;
+  --warn: #9a3412;
+  --error-bg: #fde8e1;
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615;
+    --surface: #1f1f1d;
+    --text: #ecebe7;
+    --muted: #a19e97;
+    --line: #34332f;
+    --accent: #7fb0e0;
+    --track: #2e2d2a;
+    --good: #6fd3a1;
+    --good-bg: #173a29;
+    --potential: #f0c063;
+    --potential-bg: #3d2f12;
+    --no: #b9b6ae;
+    --no-bg: #2e2d2a;
+    --warn: #f4a37f;
+    --error-bg: #4a2017;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--surface);
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+button.link {
+  border: 0;
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Estructura: lista de vacantes a la izquierda, contenido a la derecha. */
+.layout {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.vacancies {
+  border-right: 1px solid var(--line);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vacancy-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vacancy-links button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  color: var(--text);
+  padding: 0.45rem 0.6rem;
+}
+
+.vacancy-links button[aria-current="page"] {
+  background: var(--surface);
+  box-shadow: inset 3px 0 0 var(--accent);
+  font-weight: 600;
+}
+
+.vacancy-select {
+  display: none;
+}
+
+.content {
+  padding: 1.5rem 2rem 3rem;
+  max-width: 64rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.centered {
+  max-width: 36rem;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.vacancy-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.requirements {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.requirements-label {
+  color: var(--muted);
+  margin-right: 0.15rem;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.85rem;
+}
+
+.requirements-extra {
+  color: var(--muted);
+  margin-left: 0.4rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.filters input {
+  width: 5.5rem;
+}
+
+.upload-summary p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.upload-errors {
+  margin: 0.4rem 0 0;
+  padding: 0.6rem 0.9rem 0.6rem 1.6rem;
+  background: var(--error-bg);
+  border-radius: 6px;
+}
+
+.error {
+  background: var(--error-bg);
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+}
+
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+
+/* Ranking: la barra de puntaje es lo primero que se lee. */
+.ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.candidate {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.rank {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-top: 0.1rem;
+}
+
+.score-line {
+  display: grid;
+  grid-template-columns: minmax(6rem, 14rem) 3rem auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.score-bar {
+  height: 0.6rem;
+  background: var(--track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.score-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.score {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.fit {
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0.05rem 0.45rem;
+  white-space: nowrap;
+}
+
+.fit-good {
+  color: var(--good);
+  background: var(--good-bg);
+}
+
+.fit-potential {
+  color: var(--potential);
+  background: var(--potential-bg);
+}
+
+.fit-no {
+  color: var(--no);
+  background: var(--no-bg);
+}
+
+.file {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exceptions {
+  margin: 0.3rem 0 0;
+  color: var(--warn);
+  font-size: 0.9rem;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  width: fit-content;
+}
+
+details dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 1rem;
+  margin: 0.6rem 0;
+  font-size: 0.9rem;
+}
+
+details dt {
+  color: var(--muted);
+}
+
+details dd {
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.2rem 0.8rem 0.2rem 0;
+  font-weight: normal;
+}
+
+td {
+  font-variant-numeric: tabular-nums;
+}
+
+th[scope="col"] {
+  color: var(--muted);
+}
+
+.decision {
+  display: flex;
+}
+
+.decision button {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.65rem;
+}
+
+.decision button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.decision button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.decision button + button {
+  border-left: 0;
+}
+
+.decision button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
+}
+
+.model-info {
+  margin-top: 1rem;
+}
+
+.vacancy-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.vacancy-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vacancy-form small {
+  color: var(--muted);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* Teléfono: la lista de vacantes se vuelve un selector y cada fila se apila. */
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .vacancies {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .vacancies h2,
+  .vacancy-links {
+    display: none;
+  }
+
+  .vacancy-select {
+    display: block;
+    flex: 1;
+  }
+
+  .vacancy-select select {
+    width: 100%;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .candidate {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+  }
+
+  .decision {
+    grid-column: 2;
+  }
+
+  .score-line {
+    grid-template-columns: minmax(0, 1fr) 3rem auto;
+  }
+
+  .file {
+    grid-column: 1 / -1;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

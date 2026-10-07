@@ -36,6 +36,8 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
 - Datos de entrenamiento: `python -m cv_screening.datasets download`, luego `prepare` y
   `preprocess`. Modelos: `python -m cv_screening.models train` (resultados en
   `docs/resultados.md`).
+- Dashboard: `cd frontend && pnpm install && pnpm build`, luego `uvicorn cv_screening.api:app`
+  (http://127.0.0.1:8000). Desarrollo: `pnpm dev` con la API corriendo. Usar pnpm, no npm.
 - CVs de muestra: editar `data/samples/es/cvs/*.md` y regenerar con
   `python scripts/build_samples.py` (requiere LibreOffice). Detalle en `data/README.md`.
 
