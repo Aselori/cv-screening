@@ -77,6 +77,10 @@ class Features(BaseModel):
     skill_coverage: float = Field(ge=0, le=1)
     experience_fit: float = Field(ge=0, le=1)
     education_fit: float = Field(ge=0, le=1)
+    # Relativas a los demás candidatos de la vacante (fase 5).
+    similarity_rank: float | None = Field(default=None, ge=0, le=1)
+    coverage_rank: float | None = Field(default=None, ge=0, le=1)
+    matched_skills: float | None = Field(default=None, ge=0, le=1)
 
 
 class Evaluation(BaseModel):

@@ -65,6 +65,15 @@ python -m cv_screening.pipeline data/samples/es/pdf --out salida/
 Se genera un JSON por CV y `errors.json` con los archivos que no se pudieron leer. Los datos de
 entrenamiento se describen en [data/README.md](data/README.md).
 
+Iniciar la API (requiere el modelo entrenado: `python -m cv_screening.models train`):
+
+```bash
+uvicorn cv_screening.api:app --reload
+```
+
+La documentación interactiva queda en http://127.0.0.1:8000/docs. Los datos se guardan en
+`data/app.db` (SQLite, fuera de Git).
+
 ## Estructura
 
 ```

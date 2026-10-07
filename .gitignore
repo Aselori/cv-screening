@@ -9,6 +9,8 @@ __pycache__/
 # Datos y modelos generados (se regeneran con los scripts de data/)
 data/raw/
 data/processed/
+# Base de datos local de la API (fase 6)
+data/*.db
 models/*.joblib
 
 # Node (dashboard, fase 7)

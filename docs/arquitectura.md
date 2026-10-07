@@ -110,8 +110,8 @@ ahí se exporta el esquema JSON que usa el dashboard. Los nombres de campos est�
     "experience_fit": 1.0,
     "education_fit": 1.0
   },
-  "matched_skills": ["python", "sql", "excel"],
-  "missing_skills": ["tableau"],
+  "matched_skills": ["Excel", "Python", "SQL"],
+  "missing_skills": ["Tableau"],
   "years_experience": 4,
   "education_level": "bachelor",
   "recruiter_decision": null
@@ -124,17 +124,28 @@ ahí se exporta el esquema JSON que usa el dashboard. Los nombres de campos est�
 `Vacancy`: `vacancy_id`, `title`, `description`, `required_skills`, `preferred_skills`,
 `min_years_experience`, `min_education_level`.
 
-## 5. API REST (propuesta)
+## 5. API REST
+
+Implementada en `src/cv_screening/api.py` (fase 6); documentación interactiva en `/docs`.
 
 | Método | Ruta | Uso | RF |
 |---|---|---|---|
 | POST | `/vacancies` | Crear vacante | RF-01 |
 | GET | `/vacancies`, `/vacancies/{id}` | Consultar vacantes | RF-01 |
-| POST | `/vacancies/{id}/resumes` | Cargar un lote de CVs (multipart) y evaluarlos | RF-02 a RF-09 |
-| GET | `/vacancies/{id}/ranking` | Ranking con filtros | RF-10 |
-| PUT | `/evaluations/{id}/decision` | Registrar la decisión del reclutador | RF-11 |
-| POST | `/model/retrain` | Reentrenar con la retroalimentación | RF-12 |
+| POST | `/vacancies/{id}/resumes` | Cargar un lote de CVs (campo `files`, multipart) y volver a evaluar a todos los candidatos de la vacante | RF-02 a RF-09 |
+| GET | `/vacancies/{id}/ranking` | Ranking; filtros `min_score`, `skill` y `min_years` | RF-10 |
+| PUT | `/vacancies/{id}/candidates/{candidate_id}/decision` | Registrar la decisión del reclutador (`{"decision": "Good Fit"}` o `null`) | RF-11 |
 | GET | `/model/metrics` | Métricas del modelo vigente | RF-13 |
+| POST | `/model/retrain` | Reentrenar con la retroalimentación (pendiente, fase 8) | RF-12 |
+
+**Los puntajes cambian al cargar más CVs.** Tres características comparan a cada candidato con
+los demás de la vacante, así que cada carga vuelve a evaluar a todos. Las decisiones del
+reclutador se conservan.
+
+**El orden y la clase pueden no coincidir.** La clase (`predicted_class`) es la más probable;
+el puntaje combina las tres probabilidades. Un candidato con 45 % de `Good Fit` y 30 % de
+`No Fit` tiene clase `Good Fit` pero puede quedar debajo de otro con 40 % de `Good Fit` y 52 %
+de `Potential Fit`. El ranking siempre sigue el puntaje.
 
 ## 6. Librerías y entorno
 
@@ -174,7 +185,8 @@ src/cv_screening/
   extraction.py        años de experiencia, nivel educativo y requisitos de vacantes (fase 4)
   features.py          características CV-vacante, calculadas por vacante (fase 5)
   models.py            entrenamiento, evaluación y puntaje (fase 5)
-  storage.py           SQLite (fases 6 y 8)
+  scoring.py           motor de puntuación: evalúa y ordena los CVs de una vacante (fase 6)
+  storage.py           SQLite: vacantes, candidatos, evaluaciones y decisiones (fase 6)
   api.py               FastAPI (fase 6)
 frontend/              dashboard React (fase 7)
 models/                modelos entrenados (fuera de Git)
