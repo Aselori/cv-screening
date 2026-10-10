@@ -58,6 +58,13 @@ interface SplitMetrics {
   accuracy: number;
 }
 
+export interface RetrainResult {
+  feedback_pairs: number;
+  macro_f1_before: number;
+  macro_f1_after: number;
+  accepted: boolean;
+}
+
 export interface ModelMetrics {
   models: Record<string, Record<string, SplitMetrics>>;
   trained_at: string;

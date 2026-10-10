@@ -163,7 +163,12 @@ export function App() {
             )}
           </>
         )}
-        {metrics && <ModelInfo metrics={metrics} />}
+        {metrics && (
+          <ModelInfo
+            metrics={metrics}
+            onRetrained={() => selectedId && api.ranking(selectedId).then(setRanking).catch(fail)}
+          />
+        )}
       </main>
     </div>
   );

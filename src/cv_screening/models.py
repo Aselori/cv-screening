@@ -187,6 +187,58 @@ def train(models_dir: Path = MODELS_DIR) -> dict:
     return results
 
 
+# Reentrenamiento con la retroalimentación del reclutador (RF-12, fase 8).
+FEEDBACK_WEIGHT = 5.0
+MIN_FEEDBACK = 3
+# Se acepta el modelo nuevo si su F1 macro en la prueba en inglés no baja más que esto.
+MAX_F1_DROP = 0.01
+
+
+def retrain_with_feedback(
+    X_feedback: np.ndarray, y_feedback: list[str], models_dir: Path = MODELS_DIR
+) -> dict:
+    """Reentrena la Regresión Logística con los datos base más las decisiones del reclutador.
+
+    Cada decisión pesa FEEDBACK_WEIGHT veces más que un par del conjunto base. El modelo nuevo
+    solo reemplaza al vigente si su F1 macro en la prueba en inglés no baja más de
+    MAX_F1_DROP; si se reemplaza, el anterior queda en model.previous.joblib.
+    """
+    if len(y_feedback) < MIN_FEEDBACK:
+        raise ValueError(f"Se necesitan al menos {MIN_FEEDBACK} decisiones del reclutador.")
+    X_train, y_train, _ = english_features("train")
+    X_test, y_test, _ = english_features("test")
+    model_file = models_dir / "model.joblib"
+    current = joblib.load(model_file)
+
+    candidate = build_models()["logistic_regression"]
+    weights = np.concatenate([np.ones(len(y_train)), np.full(len(y_feedback), FEEDBACK_WEIGHT)])
+    candidate.fit(
+        np.vstack([X_train, X_feedback]),
+        np.concatenate([y_train, np.asarray(y_feedback)]),
+        logisticregression__sample_weight=weights,
+    )
+    f1_before = metrics(y_test, current["model"].predict(X_test))["macro_f1"]
+    f1_after = metrics(y_test, candidate.predict(X_test))["macro_f1"]
+    accepted = f1_after >= f1_before - MAX_F1_DROP
+    result = {
+        "date": datetime.now().isoformat(timespec="seconds"),
+        "feedback_pairs": len(y_feedback),
+        "macro_f1_before": f1_before,
+        "macro_f1_after": f1_after,
+        "accepted": bool(accepted),
+    }
+    if accepted:
+        model_file.replace(models_dir / "model.previous.joblib")
+        joblib.dump(
+            {"model": candidate, "features": FEATURE_NAMES, "trained_at": result["date"]},
+            model_file,
+        )
+    history_file = models_dir / "retraining.json"
+    history = json.loads(history_file.read_text()) if history_file.exists() else []
+    history_file.write_text(json.dumps([*history, result], indent=2))
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["train"])
