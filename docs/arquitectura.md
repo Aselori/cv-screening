@@ -188,7 +188,7 @@ src/cv_screening/
   scoring.py           motor de puntuación: evalúa y ordena los CVs de una vacante (fase 6)
   storage.py           SQLite: vacantes, candidatos, evaluaciones y decisiones (fase 6)
   api.py               FastAPI (fase 6)
-frontend/              dashboard React (fase 7)
+frontend/              dashboard React + Vite + TypeScript con pnpm; FastAPI sirve frontend/dist (fase 7)
 models/                modelos entrenados (fuera de Git)
 tests/                 pruebas
 ```
@@ -206,3 +206,4 @@ tests/                 pruebas
 | D7 | Los modelos usan solo características que no dependen del idioma, no las palabras del texto. | Permite entrenar con pares en inglés y evaluar pares en español con el mismo modelo. | Usar también los vectores TF-IDF como características: posiblemente más preciso en inglés, pero inútil en español. |
 | D8 | La anonimización usa patrones y la estructura del CV, sin reconocimiento de entidades. | Medido en la fase 2: el reconocimiento de entidades marcaba habilidades y empresas como personas, y borrarlas dañaría las características. | spaCy NER como apoyo (plan original de la fase 1). |
 | D9 | El TF-IDF de `text_similarity` se ajusta por vacante con sus candidatos, y se agregan tres características relativas a esos candidatos. | Mismo comportamiento en entrenamiento, en español y en uso real, sin corpus por idioma; medido en la fase 5: F1 macro similar al TF-IDF global (0.384 frente a 0.388) y +0.03 con las características relativas. | TF-IDF ajustado con todo el corpus de entrenamiento: necesitaría otro corpus para español. |
+| D10 | El dashboard se compila con Vite a archivos estáticos que sirve FastAPI. | Un solo proceso para la demostración y para el equipo; la interfaz no necesita servidor propio. | Next.js: agregaría un segundo servidor sin beneficio para un panel local. |

@@ -65,14 +65,27 @@ python -m cv_screening.pipeline data/samples/es/pdf --out salida/
 Se genera un JSON por CV y `errors.json` con los archivos que no se pudieron leer. Los datos de
 entrenamiento se describen en [data/README.md](data/README.md).
 
-Iniciar la API (requiere el modelo entrenado: `python -m cv_screening.models train`):
+## Dashboard
+
+Requiere el modelo entrenado (`python -m cv_screening.models train`), Node.js y
+[pnpm](https://pnpm.io/). Compilar el dashboard una vez y levantar el servidor:
 
 ```bash
-uvicorn cv_screening.api:app --reload
+cd frontend && pnpm install && pnpm build && cd ..
+uvicorn cv_screening.api:app
 ```
 
-La documentación interactiva queda en http://127.0.0.1:8000/docs. Los datos se guardan en
-`data/app.db` (SQLite, fuera de Git).
+El dashboard queda en http://127.0.0.1:8000 y la documentación de la API en
+http://127.0.0.1:8000/docs. Los datos se guardan en `data/app.db` (SQLite, fuera de Git).
+
+Para desarrollar la interfaz con recarga automática, con la API corriendo en otra terminal:
+
+```bash
+cd frontend && pnpm dev   # http://localhost:5173, envía las peticiones a la API
+```
+
+Si el puerto 8000 está ocupado, usar `uvicorn cv_screening.api:app --port 8001` y, para
+`pnpm dev`, cambiar el puerto en `frontend/vite.config.ts`.
 
 ## Estructura
 

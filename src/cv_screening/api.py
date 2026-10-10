@@ -8,6 +8,7 @@ import json
 from typing import Annotated
 
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile, status
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from cv_screening.datasets import DATA_DIR
@@ -19,6 +20,8 @@ from cv_screening.scoring import evaluate_candidates
 from cv_screening.storage import Storage
 
 DEFAULT_DB = DATA_DIR / "app.db"
+# Dashboard compilado con `pnpm build` en frontend/ (fase 7).
+FRONTEND_DIST = DATA_DIR.parent / "frontend" / "dist"
 
 
 class VacancyCreate(BaseModel):
@@ -47,7 +50,7 @@ class Decision(BaseModel):
     decision: FitLabel | None
 
 
-def create_app(db_path=DEFAULT_DB) -> FastAPI:
+def create_app(db_path=DEFAULT_DB, frontend_dir=FRONTEND_DIST) -> FastAPI:
     app = FastAPI(
         title="Selección y filtrado de currículums",
         description="Evalúa CVs en PDF o DOCX contra una vacante y los ordena por idoneidad.",
@@ -120,6 +123,9 @@ def create_app(db_path=DEFAULT_DB) -> FastAPI:
             raise HTTPException(status.HTTP_404_NOT_FOUND, "El modelo no se ha entrenado.")
         return json.loads(path.read_text(encoding="utf-8"))
 
+    # Se monta al final para que las rutas de la API tengan prioridad sobre los archivos.
+    if frontend_dir.exists():
+        app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="dashboard")
     return app
 
 
