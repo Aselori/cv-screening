@@ -12,7 +12,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fase 4 (preprocesamiento PLN): **aprobada, en `main`**.
 - Fase 5 (características y modelos): **aprobada, en `main`**.
 - Fase 6 (motor de puntuación y API): **aprobada, en `main`**.
-- Fase 7 (dashboard): **terminada en `phase-7-dashboard`, pendiente de revisión**.
+- Fase 7 (dashboard): **aprobada, en `main`**.
 
 ## Decisiones de Aldo
 
@@ -32,11 +32,13 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
   pnpm (su gestor de paquetes por defecto), servido por FastAPI como un solo proceso.
 - Fase 7 aprobada (2026-10-07): estructura y maqueta del dashboard, y crear
   `frontend/package.json`. pnpm 12.9.1 instalado globalmente con mise (en `~/dotfiles`).
+- 2026-10-09: Aldo no tiene preferencias sobre el proyecto. Continuar las fases sin pedir
+  aprobación entre ellas; detenerse solo en preguntas donde su opinión importe. Push y merge
+  siguen esperando su autorización: se acumulan en ramas y se pide una sola vez.
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 6.
-- `phase-7-dashboard` (local, sin subir).
+- `main` (en GitHub): fases 1 a 7.
 
 ## Fase 7: hecho
 
@@ -67,7 +69,6 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Pendiente de Aldo
 
-- Revisar la fase 7 y autorizar push y merge de `phase-7-dashboard`.
 - En la laptop: `work pull` en `~/dotfiles` y `mise install` para tener pnpm.
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
