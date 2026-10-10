@@ -15,6 +15,8 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fase 7 (dashboard): **aprobada, en `main`**.
 - Fase 8 (integración, sesgos, tiempos, reentrenamiento): **terminada en
   `phase-8-integration`, sin subir**.
+- Fase 9 (ajustes finales y documentación): **terminada en `phase-9-final`, sin subir**.
+  Con esto, las 9 fases del cronograma están hechas en código.
 
 ## Decisiones de Aldo
 
@@ -42,6 +44,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 - `main` (en GitHub): fases 1 a 7.
 - `phase-8-integration` (local, sin subir; sale de `main`).
+- `phase-9-final` (local, sin subir; sale de `phase-8-integration`).
 
 ## Fase 8: hecho
 
@@ -58,12 +61,22 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Docs: `docs/resultados.md` secciones 5 (sesgos), 6 (tiempos) y 7 (reentrenamiento); API en
   arquitectura.
 
+## Fase 9: hecho
+
+- `models/model.joblib` (2 KB) en Git: la demo corre después de clonar, sin datos.
+- README reorganizado (qué hace, correr la demo en Linux/macOS/Windows, uso, entrenamiento,
+  pruebas, documentación, estructura); requisito de Node.js leído del `engines` de Vite.
+- `docs/demo.md`: guion del video del PIA con la vacante de analista de datos.
+
 ## Verificado
 
 - 192 pruebas pasan, `ruff` limpio, `pnpm build` sin errores.
 - Tiempos (RNF-03) con la API y 48 documentos: 0.05 s por CV, lote de 48 en 2.3 s.
 - Playwright (versión 1.63; la 1.64 global no tiene navegador descargado): botón de
   reentrenar con 0 decisiones (mensaje de mínimo) y con 4 (modelo actualizado, 0.415 a 0.411).
+- Clon limpio de `phase-9-final` siguiendo el README en Linux: instalación, modelos de spaCy,
+  `pnpm build`, 191 pruebas pasan y 1 se omite (reentrenamiento sin datos); el servidor
+  evalúa CVs con el modelo guardado.
 
 ## No verificado
 
@@ -74,13 +87,17 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Pendiente de Aldo
 
-- Autorizar push y merge de `phase-8-integration` (y de la fase 9 cuando esté).
+- Autorizar push y merge de `phase-8-integration` y `phase-9-final`.
+- Decidir si Claude redacta el documento del PIA o los reportes de avance (los entrega otra
+  persona del equipo).
 - Opcional: `playwright install` para descargar el navegador de Playwright 1.64.
 - En la laptop: `work pull` en `~/dotfiles` y `mise install` para tener pnpm.
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
 
-1. Fase 9 (cronograma: 9 al 13 de noviembre): ajustes finales, documentación técnica y
-   preparación de la presentación. Continuar sin pedir aprobación (decisión del 2026-10-09);
-   preguntar a Aldo solo si se necesita su opinión (por ejemplo, si hacer el documento del PIA).
+1. Tras la autorización: merge `--no-ff` de `phase-8-integration` y `phase-9-final` a `main`,
+   push de las tres ramas.
+2. Según lo que decida Aldo: documento del PIA (portada con logos, índice, introducción,
+   resumen, metodología, desarrollo, resultados, conclusiones, bibliografía APA) a partir de
+   `docs/`, o nada más.
