@@ -43,7 +43,8 @@ Ver `docs/arquitectura.md`, sección 8. En resumen:
 
 ## Reglas
 
-- No modificar archivos `.env` ni subir datos descargados o modelos entrenados (están en
-  `.gitignore`).
+- No modificar archivos `.env` ni subir datos descargados (están en `.gitignore`). El modelo
+  base `models/model.joblib` sí está en Git (2 KB) para correr la demo sin entrenar; si se
+  reentrena con `python -m cv_screening.models train`, se sube junto con `models/metrics.json`.
 - Los CVs de prueba usan solo datos ficticios.
 - Una rama por fase o tarea; `git push` y merges solo con aprobación del responsable.

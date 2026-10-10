@@ -189,7 +189,7 @@ src/cv_screening/
   storage.py           SQLite: vacantes, candidatos, evaluaciones y decisiones (fase 6)
   api.py               FastAPI (fase 6)
 frontend/              dashboard React + Vite + TypeScript con pnpm; FastAPI sirve frontend/dist (fase 7)
-models/                modelos entrenados (fuera de Git)
+models/                modelo base y métricas (en Git); respaldo de reentrenamiento fuera de Git
 tests/                 pruebas
 ```
 
