@@ -16,6 +16,22 @@ SPACY_MODELS = {Language.ES: "es_core_news_sm", Language.EN: "en_core_web_sm"}
 # Etiquetas que deja la anonimización; no aportan contenido.
 PLACEHOLDER_RE = re.compile(r"\[(?:NOMBRE|CORREO|TELEFONO|URL|DOMICILIO)\]")
 
+# Formas femeninas de puestos y títulos, llevadas a una sola forma (RNF-02). El lematizador de
+# spaCy las conserva ("desarrolladora"), y como las vacantes suelen escribirse en masculino, una
+# candidata recibía menos similitud de texto que un candidato con el mismo CV (fase 8).
+GENDERED_FORMS = {
+    "desarrolladora": "desarrollador", "programadora": "programador",
+    "administradora": "administrador", "coordinadora": "coordinador", "operadora": "operador",
+    "trabajadora": "trabajador", "investigadora": "investigador", "vendedora": "vendedor",
+    "contadora": "contador", "directora": "director", "asesora": "asesor",
+    "consultora": "consultor", "supervisora": "supervisor", "profesora": "profesor",
+    "doctora": "doctor", "diseñadora": "diseñador", "ingeniera": "ingeniero", "cajera": "cajero",
+    "enfermera": "enfermero", "cocinera": "cocinero", "empleada": "empleado",
+    "egresada": "egresado", "licenciada": "licenciado", "titulada": "titulado",
+    "encargada": "encargado", "abogada": "abogado", "tecnica": "tecnico", "medica": "medico",
+    "ejecutiva": "ejecutivo", "actuaria": "actuario", "maestra": "maestro", "jefa": "jefe",
+}  # fmt: skip
+
 
 @cache
 def _nlp(language: Language):
@@ -35,9 +51,19 @@ def clean(text: str) -> str:
     return re.sub(r"[•|·]", " ", text)
 
 
+def _lemma(token) -> str:
+    # La palabra escrita se revisa antes que su lema: con mayúscula inicial, spaCy lematiza
+    # "Desarrolladora" como "desarrolladoro".
+    word = strip_accents(token.text.lower())
+    if word in GENDERED_FORMS:
+        return GENDERED_FORMS[word]
+    lemma = strip_accents(token.lemma_.lower())
+    return GENDERED_FORMS.get(lemma, lemma)
+
+
 def _lemmas(doc) -> list[str]:
     return [
-        strip_accents(token.lemma_.lower())
+        _lemma(token)
         for token in doc
         if not (token.is_stop or token.is_punct or token.is_space or token.like_num)
         and any(c.isalpha() for c in token.text)

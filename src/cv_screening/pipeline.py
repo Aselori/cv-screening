@@ -42,6 +42,11 @@ def _to_cv(document: IngestedDocument, anonymized: bool) -> CV:
     return cv
 
 
+def process_text(text: str, file_name: str, *, anonymized: bool = True) -> CV:
+    """Como `process_document`, pero con el texto ya extraído (útil en pruebas)."""
+    return _to_cv(IngestedDocument(file_name=file_name, text=text), anonymized)
+
+
 def process_document(data: bytes, file_name: str, *, anonymized: bool = True) -> CV:
     """Convierte un PDF o DOCX en un `CV`. Lanza IngestionError si no se puede procesar."""
     return _to_cv(extract_text(data, file_name), anonymized)
