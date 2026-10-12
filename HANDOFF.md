@@ -13,9 +13,8 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fase 5 (características y modelos): **aprobada, en `main`**.
 - Fase 6 (motor de puntuación y API): **aprobada, en `main`**.
 - Fase 7 (dashboard): **aprobada, en `main`**.
-- Fase 8 (integración, sesgos, tiempos, reentrenamiento): **terminada en
-  `phase-8-integration`, sin subir**.
-- Fase 9 (ajustes finales y documentación): **terminada en `phase-9-final`, sin subir**.
+- Fase 8 (integración, sesgos, tiempos, reentrenamiento): **aprobada, en `main`**.
+- Fase 9 (ajustes finales y documentación): **aprobada, en `main`**.
   Con esto, las 9 fases del cronograma están hechas en código.
 
 ## Decisiones de Aldo
@@ -42,9 +41,7 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Ramas
 
-- `main` (en GitHub): fases 1 a 7.
-- `phase-8-integration` (local, sin subir; sale de `main`).
-- `phase-9-final` (local, sin subir; sale de `phase-8-integration`).
+- `main` (en GitHub): fases 1 a 9.
 
 ## Fase 8: hecho
 
@@ -87,7 +84,6 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Pendiente de Aldo
 
-- Autorizar push y merge de `phase-8-integration` y `phase-9-final`.
 - Decidir si Claude redacta el documento del PIA o los reportes de avance (los entrega otra
   persona del equipo).
 - Opcional: `playwright install` para descargar el navegador de Playwright 1.64.
@@ -96,8 +92,6 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 
 ## Siguientes pasos
 
-1. Tras la autorización: merge `--no-ff` de `phase-8-integration` y `phase-9-final` a `main`,
-   push de las tres ramas.
-2. Según lo que decida Aldo: documento del PIA (portada con logos, índice, introducción,
+1. Según lo que decida Aldo: documento del PIA (portada con logos, índice, introducción,
    resumen, metodología, desarrollo, resultados, conclusiones, bibliografía APA) a partir de
    `docs/`, o nada más.
