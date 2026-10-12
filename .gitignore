@@ -11,7 +11,9 @@ data/raw/
 data/processed/
 # Base de datos local de la API (fase 6)
 data/*.db
-models/*.joblib
+# El modelo base (models/model.joblib, 2 KB) sí se guarda para poder correr la demo sin
+# descargar ni entrenar; el respaldo que deja el reentrenamiento no.
+models/model.previous.joblib
 # Historial de reentrenamientos con la retroalimentación (fase 8)
 models/retraining.json
 
