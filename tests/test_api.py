@@ -1,12 +1,15 @@
 """Pruebas del motor de puntuación y de la API (fase 6)."""
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
 from cv_screening.api import create_app
+from cv_screening.datasets import PROCESSED_DIR
+from cv_screening.models import MODELS_DIR
 from cv_screening.pipeline import process_document
 from cv_screening.schemas import Vacancy
 from cv_screening.scoring import evaluate_candidates
@@ -97,3 +100,29 @@ def test_not_found_errors(client):
 def test_model_metrics(client):
     metrics = client.get("/model/metrics").json()
     assert metrics["models"]["logistic_regression"]["english_test"]["macro_f1"] > 0
+
+
+@pytest.mark.skipif(
+    not (PROCESSED_DIR / "train.csv").exists(), reason="faltan los datos de entrenamiento"
+)
+def test_retraining_with_feedback(tmp_path):
+    models = tmp_path / "models"
+    models.mkdir()
+    for name in ("model.joblib", "metrics.json"):
+        shutil.copy(MODELS_DIR / name, models / name)
+    client = TestClient(create_app(tmp_path / "test.db", models_dir=models))
+    vacancy = {k: v for k, v in WEB_VACANCY.items() if k != "vacancy_id"}
+    vacancy_id = client.post("/vacancies", json=vacancy).json()["vacancy_id"]
+    files = [("files", _pdf(stem)) for stem in ("cv-01", "cv-03", "cv-17")]
+    ranking = client.post(f"/vacancies/{vacancy_id}/resumes", files=files).json()["ranking"]
+
+    url = f"/vacancies/{vacancy_id}/candidates/{{}}/decision"
+    client.put(url.format(ranking[0]["candidate_id"]), json={"decision": "Good Fit"})
+    assert client.post("/model/retrain").status_code == 400  # menos de 3 decisiones
+
+    for evaluation, decision in zip(ranking[1:], ["Potential Fit", "No Fit"], strict=True):
+        client.put(url.format(evaluation["candidate_id"]), json={"decision": decision})
+    result = client.post("/model/retrain").json()
+    assert result["feedback_pairs"] == 3
+    assert (models / "model.previous.joblib").exists() == result["accepted"]
+    assert json.loads((models / "retraining.json").read_text())[-1] == result

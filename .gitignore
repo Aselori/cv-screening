@@ -12,6 +12,8 @@ data/processed/
 # Base de datos local de la API (fase 6)
 data/*.db
 models/*.joblib
+# Historial de reentrenamientos con la retroalimentación (fase 8)
+models/retraining.json
 
 # Node (dashboard, fase 7)
 node_modules/

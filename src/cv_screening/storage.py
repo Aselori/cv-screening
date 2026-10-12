@@ -107,6 +107,15 @@ class Storage:
             evaluations.append(evaluation)
         return sorted(evaluations, key=lambda e: (-e.score, -e.features.skill_coverage))
 
+    def feedback(self) -> list[tuple[Evaluation, FitLabel]]:
+        """Evaluaciones con decisión del reclutador, de todas las vacantes."""
+        with self._connect() as db:
+            rows = db.execute(
+                "SELECT evaluation, decision FROM candidates "
+                "WHERE evaluation IS NOT NULL AND decision IS NOT NULL"
+            ).fetchall()
+        return [(Evaluation.model_validate_json(data), FitLabel(d)) for data, d in rows]
+
     def set_decision(self, vacancy_id: str, candidate_id: str, decision: FitLabel | None) -> bool:
         """Guarda la decisión del reclutador; devuelve False si el candidato no existe."""
         with self._connect() as db:

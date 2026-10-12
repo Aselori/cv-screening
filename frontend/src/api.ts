@@ -1,4 +1,12 @@
-import type { Evaluation, FitLabel, ModelMetrics, UploadResult, Vacancy, VacancyCreate } from "./types";
+import type {
+  Evaluation,
+  FitLabel,
+  ModelMetrics,
+  RetrainResult,
+  UploadResult,
+  Vacancy,
+  VacancyCreate,
+} from "./types";
 
 export class ApiError extends Error {}
 
@@ -39,4 +47,5 @@ export const api = {
       json("PUT", { decision }),
     ),
   metrics: () => request<ModelMetrics>("/model/metrics"),
+  retrain: () => request<RetrainResult>("/model/retrain", { method: "POST" }),
 };

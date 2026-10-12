@@ -5,18 +5,21 @@ Uso:
 """
 
 import json
+from pathlib import Path
 from typing import Annotated
 
+import numpy as np
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile, status
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from cv_screening.datasets import DATA_DIR
+from cv_screening.features import FEATURE_NAMES
 from cv_screening.ingestion import MAX_BATCH_FILES
-from cv_screening.models import MODELS_DIR
+from cv_screening.models import MODELS_DIR, retrain_with_feedback
 from cv_screening.pipeline import process_batch
 from cv_screening.schemas import EducationLevel, Evaluation, FitLabel, Language, Vacancy
-from cv_screening.scoring import evaluate_candidates
+from cv_screening.scoring import evaluate_candidates, load_model
 from cv_screening.storage import Storage
 
 DEFAULT_DB = DATA_DIR / "app.db"
@@ -50,12 +53,27 @@ class Decision(BaseModel):
     decision: FitLabel | None
 
 
-def create_app(db_path=DEFAULT_DB, frontend_dir=FRONTEND_DIST) -> FastAPI:
+class RetrainResult(BaseModel):
+    date: str
+    feedback_pairs: int
+    macro_f1_before: float
+    macro_f1_after: float
+    accepted: bool
+
+
+def create_app(
+    db_path=DEFAULT_DB, frontend_dir=FRONTEND_DIST, models_dir: Path = MODELS_DIR
+) -> FastAPI:
     app = FastAPI(
         title="Selección y filtrado de currículums",
         description="Evalúa CVs en PDF o DOCX contra una vacante y los ordena por idoneidad.",
     )
     store = Storage(db_path)
+    model_file = models_dir / "model.joblib"
+
+    def evaluate_vacancy(vacancy: Vacancy) -> None:
+        candidates = store.list_candidates(vacancy.vacancy_id)
+        store.save_evaluations(evaluate_candidates(vacancy, candidates, load_model(model_file)))
 
     def vacancy_or_404(vacancy_id: str) -> Vacancy:
         vacancy = store.get_vacancy(vacancy_id)
@@ -86,7 +104,7 @@ def create_app(db_path=DEFAULT_DB, frontend_dir=FRONTEND_DIST) -> FastAPI:
             )
         cvs, errors = process_batch([(f.filename or "sin_nombre", f.file.read()) for f in files])
         store.add_candidates(vacancy_id, cvs)
-        store.save_evaluations(evaluate_candidates(vacancy, store.list_candidates(vacancy_id)))
+        evaluate_vacancy(vacancy)
         return UploadResult(
             processed=len(cvs),
             errors=[FileError(file_name=e.file_name, error=e.kind, message=str(e)) for e in errors],
@@ -116,9 +134,37 @@ def create_app(db_path=DEFAULT_DB, frontend_dir=FRONTEND_DIST) -> FastAPI:
             raise HTTPException(status.HTTP_404_NOT_FOUND, "El candidato no existe.")
         return next(e for e in store.get_evaluations(vacancy_id) if e.candidate_id == candidate_id)
 
+    @app.post("/model/retrain")
+    def retrain() -> RetrainResult:
+        """Reentrena con las decisiones del reclutador (RF-12). Si el modelo nuevo es peor en la
+        prueba en inglés, se conserva el anterior."""
+        feedback = store.feedback()
+        # Las características relativas pueden faltar en evaluaciones antiguas: valor neutro 0.5.
+        X = np.array(
+            [
+                [0.5 if (value := getattr(e.features, f)) is None else value for f in FEATURE_NAMES]
+                for e, _ in feedback
+            ]
+        )
+        try:
+            result = retrain_with_feedback(X, [d.value for _, d in feedback], models_dir)
+        except ValueError as error:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, str(error)) from error
+        except FileNotFoundError as error:
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "Faltan los datos de entrenamiento: ejecuta `python -m cv_screening.datasets "
+                "download`, `prepare` y `preprocess`.",
+            ) from error
+        if result["accepted"]:
+            load_model.cache_clear()
+            for vacancy in store.list_vacancies():
+                evaluate_vacancy(vacancy)
+        return RetrainResult(**result)
+
     @app.get("/model/metrics")
     def model_metrics() -> dict:
-        path = MODELS_DIR / "metrics.json"
+        path = models_dir / "metrics.json"
         if not path.exists():
             raise HTTPException(status.HTTP_404_NOT_FOUND, "El modelo no se ha entrenado.")
         return json.loads(path.read_text(encoding="utf-8"))

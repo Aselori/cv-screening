@@ -13,6 +13,8 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 - Fase 5 (características y modelos): **aprobada, en `main`**.
 - Fase 6 (motor de puntuación y API): **aprobada, en `main`**.
 - Fase 7 (dashboard): **aprobada, en `main`**.
+- Fase 8 (integración, sesgos, tiempos, reentrenamiento): **terminada en
+  `phase-8-integration`, sin subir**.
 
 ## Decisiones de Aldo
 
@@ -39,41 +41,46 @@ pulido más allá del proyecto de clase; Aldo no lo seguirá después de aprobar
 ## Ramas
 
 - `main` (en GitHub): fases 1 a 7.
+- `phase-8-integration` (local, sin subir; sale de `main`).
 
-## Fase 7: hecho
+## Fase 8: hecho
 
-- `frontend/` (React 19 + Vite 8 + TypeScript 7, pnpm 12.9.1, sin librerías de interfaz):
-  lista de vacantes, formulario, encabezado con requisitos, carga de CVs con errores por
-  archivo, filtros, ranking con barra de puntaje, excepciones (habilidades faltantes,
-  experiencia o educación insuficientes), detalle, decisión del reclutador y línea del modelo.
-  Tema claro y oscuro; en teléfono la lista se vuelve selector.
-- `api.py` sirve `frontend/dist` si existe (un solo proceso; decisión D10).
-- Docs: README (compilar y ejecutar, desarrollo, puerto ocupado), arquitectura (D10), AGENTS.
+- Sesgos (RNF-02): cambiar el nombre no cambia ningún puntaje; los puestos en femenino sí lo
+  cambiaban (hasta 5 puntos). `preprocessing.GENDERED_FORMS` lleva 32 puestos a una sola
+  forma, revisando la palabra escrita antes que su lema; diferencia restante: 0.1 puntos.
+  `tests/test_fairness.py` cubre ambos casos.
+- Reentrenamiento (RF-12): `models.retrain_with_feedback`, `POST /model/retrain` y botón en el
+  detalle del modelo del dashboard. Peso 5 por decisión, mínimo 3 decisiones, se acepta si el
+  F1 en inglés no baja más de 0.01; respaldo `model.previous.joblib` e historial
+  `models/retraining.json` (fuera de Git). Tras aceptar, se re-evalúan todas las vacantes.
+- `pipeline.process_text` (procesar texto ya extraído).
+- Modelo base reentrenado: inglés igual (0.415); español 0.676 (antes 0.652).
+- Docs: `docs/resultados.md` secciones 5 (sesgos), 6 (tiempos) y 7 (reentrenamiento); API en
+  arquitectura.
 
 ## Verificado
 
-- `pnpm build` (incluye `tsc --noEmit`) sin errores; 189 pruebas de Python pasan.
-- Playwright contra el servidor real (1366x860, 390x844, tema oscuro): estado vacío, creación
-  de vacante, 8 CVs evaluados y un PDF dañado reportado, detalle, decisión que persiste al
-  recargar, filtros, sin desbordamiento horizontal en teléfono, mensaje con la API caída,
-  0 errores de consola.
-- Proxy de `pnpm dev` hacia la API verificado (con la API en otro puerto, porque el 8000 de
-  esta máquina estaba ocupado por otro proceso).
+- 192 pruebas pasan, `ruff` limpio, `pnpm build` sin errores.
+- Tiempos (RNF-03) con la API y 48 documentos: 0.05 s por CV, lote de 48 en 2.3 s.
+- Playwright (versión 1.63; la 1.64 global no tiene navegador descargado): botón de
+  reentrenar con 0 decisiones (mensaje de mínimo) y con 4 (modelo actualizado, 0.415 a 0.411).
 
 ## No verificado
 
 - Instalación en Windows y en Python 3.12 o 3.13.
 - CVs reales de formatos complejos; vacante y CVs en idiomas distintos (similitud casi 0).
 - Etiquetas del conjunto propio: borrador sin revisar; el resultado en español es optimista.
-- Lectores de pantalla (solo se revisaron etiquetas, roles y foco en el código).
+- Lectores de pantalla.
 
 ## Pendiente de Aldo
 
+- Autorizar push y merge de `phase-8-integration` (y de la fase 9 cuando esté).
+- Opcional: `playwright install` para descargar el navegador de Playwright 1.64.
 - En la laptop: `work pull` en `~/dotfiles` y `mise install` para tener pnpm.
 - Invitar al equipo y pedirles revisar `data/samples/es/labels.csv`.
 
 ## Siguientes pasos
 
-1. Fase 8 (cronograma: 2 al 6 de noviembre): integración y pruebas del flujo completo,
-   reentrenamiento con la retroalimentación (RF-12), revisión de sesgos (RNF-02: cambiar el
-   nombre no cambia el puntaje) y tiempos (RNF-03). Planearla y pedir aprobación.
+1. Fase 9 (cronograma: 9 al 13 de noviembre): ajustes finales, documentación técnica y
+   preparación de la presentación. Continuar sin pedir aprobación (decisión del 2026-10-09);
+   preguntar a Aldo solo si se necesita su opinión (por ejemplo, si hacer el documento del PIA).

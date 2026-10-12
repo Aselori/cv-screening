@@ -68,11 +68,11 @@
         ]
       },
       "spanish_all": {
-        "macro_f1": 0.652,
-        "accuracy": 0.865,
+        "macro_f1": 0.676,
+        "accuracy": 0.875,
         "f1_by_class": {
-          "No Fit": 0.967,
-          "Potential Fit": 0.435,
+          "No Fit": 0.973,
+          "Potential Fit": 0.5,
           "Good Fit": 0.556
         },
         "confusion_matrix": [
@@ -82,8 +82,8 @@
             0
           ],
           [
-            1,
-            5,
+            0,
+            6,
             5
           ],
           [
@@ -174,12 +174,12 @@
         ]
       },
       "spanish_all": {
-        "macro_f1": 0.569,
-        "accuracy": 0.875,
+        "macro_f1": 0.593,
+        "accuracy": 0.885,
         "f1_by_class": {
           "No Fit": 0.981,
-          "Potential Fit": 0.56,
-          "Good Fit": 0.167
+          "Potential Fit": 0.615,
+          "Good Fit": 0.182
         },
         "confusion_matrix": [
           [
@@ -189,8 +189,8 @@
           ],
           [
             2,
-            7,
-            2
+            8,
+            1
           ],
           [
             0,
@@ -200,12 +200,12 @@
         ]
       },
       "spanish_same_domain": {
-        "macro_f1": 0.514,
-        "accuracy": 0.542,
+        "macro_f1": 0.543,
+        "accuracy": 0.583,
         "f1_by_class": {
           "No Fit": 0.875,
-          "Potential Fit": 0.5,
-          "Good Fit": 0.167
+          "Potential Fit": 0.571,
+          "Good Fit": 0.182
         },
         "confusion_matrix": [
           [
@@ -215,8 +215,8 @@
           ],
           [
             1,
-            5,
-            2
+            6,
+            1
           ],
           [
             0,
@@ -390,5 +390,5 @@
       "matched_skills": -0.087
     }
   },
-  "trained_at": "2026-10-05T16:38:35"
+  "trained_at": "2026-10-09T18:43:09"
 }

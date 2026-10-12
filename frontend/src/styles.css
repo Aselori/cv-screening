@@ -428,6 +428,15 @@ th[scope="col"] {
   margin-top: 1rem;
 }
 
+.retrain {
+  margin-top: 0.8rem;
+}
+
+.retrain p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
 .vacancy-form {
   display: flex;
   flex-direction: column;

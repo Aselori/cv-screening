@@ -136,7 +136,7 @@ Implementada en `src/cv_screening/api.py` (fase 6); documentación interactiva e
 | GET | `/vacancies/{id}/ranking` | Ranking; filtros `min_score`, `skill` y `min_years` | RF-10 |
 | PUT | `/vacancies/{id}/candidates/{candidate_id}/decision` | Registrar la decisión del reclutador (`{"decision": "Good Fit"}` o `null`) | RF-11 |
 | GET | `/model/metrics` | Métricas del modelo vigente | RF-13 |
-| POST | `/model/retrain` | Reentrenar con la retroalimentación (pendiente, fase 8) | RF-12 |
+| POST | `/model/retrain` | Reentrenar con las decisiones del reclutador; conserva el modelo anterior si el nuevo es peor (fase 8) | RF-12 |
 
 **Los puntajes cambian al cargar más CVs.** Tres características comparan a cada candidato con
 los demás de la vacante, así que cada carga vuelve a evaluar a todos. Las decisiones del
